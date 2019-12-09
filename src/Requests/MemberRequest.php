@@ -31,6 +31,17 @@ class MemberRequest
     private $operationType;
     private $acctType;
     private $acct;
+    private $vspMerchantid;
+    private $vspCusid;
+    private $appid;
+    private $vspTermid;
+    private $result;
+    private $checkTime;
+    private $remark;
+    private $failReason;
+    private $setSafeCard;
+    private $accountSetNo;
+    private $acctOrgType;
 
     /**
      * @return mixed
@@ -446,6 +457,182 @@ class MemberRequest
     public function setAcct($acct): void
     {
         $this->acct = $acct;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVspMerchantid()
+    {
+        return $this->vspMerchantid;
+    }
+
+    /**
+     * @param mixed $vspMerchantid
+     */
+    public function setVspMerchantid($vspMerchantid): void
+    {
+        $this->vspMerchantid = $vspMerchantid;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVspCusid()
+    {
+        return $this->vspCusid;
+    }
+
+    /**
+     * @param mixed $vspCusid
+     */
+    public function setVspCusid($vspCusid): void
+    {
+        $this->vspCusid = $vspCusid;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAppid()
+    {
+        return $this->appid;
+    }
+
+    /**
+     * @param mixed $appid
+     */
+    public function setAppid($appid): void
+    {
+        $this->appid = $appid;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVspTermid()
+    {
+        return $this->vspTermid;
+    }
+
+    /**
+     * @param mixed $vspTermid
+     */
+    public function setVspTermid($vspTermid): void
+    {
+        $this->vspTermid = $vspTermid;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    /**
+     * @param mixed $result
+     */
+    public function setResult($result): void
+    {
+        $this->result = $result;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCheckTime()
+    {
+        return $this->checkTime;
+    }
+
+    /**
+     * @param mixed $checkTime
+     */
+    public function setCheckTime($checkTime): void
+    {
+        $this->checkTime = $checkTime;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRemark()
+    {
+        return $this->remark;
+    }
+
+    /**
+     * @param mixed $remark
+     */
+    public function setRemark($remark): void
+    {
+        $this->remark = $remark;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFailReason()
+    {
+        return $this->failReason;
+    }
+
+    /**
+     * @param mixed $failReason
+     */
+    public function setFailReason($failReason): void
+    {
+        $this->failReason = $failReason;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSetSafeCard()
+    {
+        return $this->setSafeCard;
+    }
+
+    /**
+     * @param mixed $setSafeCard
+     */
+    public function setSetSafeCard($setSafeCard): void
+    {
+        $this->setSafeCard = $setSafeCard;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccountSetNo()
+    {
+        return $this->accountSetNo;
+    }
+
+    /**
+     * @param mixed $accountSetNo
+     */
+    public function setAccountSetNo($accountSetNo): void
+    {
+        $this->accountSetNo = $accountSetNo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAcctOrgType()
+    {
+        return $this->acctOrgType;
+    }
+
+    /**
+     * @param mixed $acctOrgType
+     */
+    public function setAcctOrgType($acctOrgType): void
+    {
+        $this->acctOrgType = $acctOrgType;
     }
 
 }

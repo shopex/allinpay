@@ -11,8 +11,23 @@ use Tonglian\Allinpay\Requests\MerchantRequest;
 
 class MerchantService
 {
+
     /**
-     * 平台集合对账下载接口
+     * 4.3.1 通联通头寸查询
+     *
+     * @param MerchantRequest $request
+     * @return array
+     */
+    public function queryReserveFundBalance(MerchantRequest $request)
+    {
+        $param = [
+            'sysid' => $request->getSysid(),
+        ];
+        return app('allinpay')->AllinpayCurl('MerchantService', 'queryReserveFundBalance', $param);
+    }
+
+    /**
+     * 4.3.2 商户集合对账文件下载
      *
      * @param MerchantRequest $request
      * @return array
@@ -28,15 +43,35 @@ class MerchantService
     }
 
     /**
-     * 通联通头寸查询
+     * 4.3.4 平台账户集余额查询
      *
      * @param MerchantRequest $request
      * @return array
      */
-    public function queryReserveFundBalance(MerchantRequest $request)
+    public function queryMerchantBalance(MerchantRequest $request)
     {
-        $param = [];
-        return app('allinpay')->AllinpayCurl('MerchantService', 'queryReserveFundBalance', $param);
+        $param = [
+            'accountSetNo'    =>  $request->getAccountSetNo(),
+        ];
+
+        return app('allinpay')->AllinpayCurl('MerchantService', 'queryMerchantBalance', $param);
+    }
+
+    /**
+     * 4.3.5 平台银行存管账户余额查询
+     *
+     * @param MerchantRequest $request
+     * @return array
+     */
+    public function queryBankBalance(MerchantRequest $request)
+    {
+        $param = [
+            'acctOrgType'    =>  $request->getAcctOrgType(),
+            'acctNo'    =>  $request->getAcctNo(),
+            'acctName'    =>  $request->getAcctName(),
+        ];
+
+        return app('allinpay')->AllinpayCurl('MerchantService', 'queryBankBalance', $param);
     }
 
 }

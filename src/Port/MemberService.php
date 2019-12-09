@@ -12,7 +12,7 @@ use Tonglian\Allinpay\Requests\MemberRequest;
 class MemberService
 {
     /**
-     * 创建会员 4.1.1
+     * 4.1.1 创建会员
      *
      * @param MemberRequest $request
      * @return array
@@ -30,7 +30,7 @@ class MemberService
     }
 
     /**
-     * 查询会员 4.1.8
+     * 4.1.8 获取会员信息
      *
      * @param MemberRequest $request
      * @return array
@@ -38,14 +38,14 @@ class MemberService
     public function getMemberInfo(MemberRequest $request)
     {
         $param = [
-            'bizUserId' => $request->getBizUserId()
+            'bizUserId' => $request->getBizUserId(),
         ];
 
         return app('allinpay')->AllinpayCurl('MemberService', 'getMemberInfo', $param);
     }
 
     /**
-     * 发送短信验证码 4.1.2
+     * 4.1.2 发送短信验证码
      *
      * @param MemberRequest $request
      * @return array|mixed
@@ -61,7 +61,7 @@ class MemberService
     }
 
     /**
-     * 绑定手机 4.1.3
+     * 4.1.3 绑定手机
      *
      * @param MemberRequest $request
      * @return array
@@ -78,7 +78,7 @@ class MemberService
 
 
     /**
-     * 会员绑定支付账户用户标识 4.1.23
+     * 4.1.23 会员绑定支付账户用户标识
      *
      * @param MemberRequest $request
      * @return array|mixed
@@ -97,7 +97,7 @@ class MemberService
     }
 
     /**
-     * 会员电子协议签约 4.1.4
+     * 4.1.4 会员电子协议签约
      * @param MemberRequest $request
      * @return array|mixed
      */
@@ -113,7 +113,7 @@ class MemberService
     }
 
     /**
-     * 个人实名认证 4.1.5
+     * 4.1.5 个人实名认证
      *
      * @param MemberRequest $request
      * @return array|mixed
@@ -134,7 +134,7 @@ class MemberService
     }
 
     /**
-     * 设置企业信息 4.1.6
+     * 4.1.6 设置企业信息
      *
      * @param MemberRequest $request
      * @return array|mixed
@@ -154,7 +154,26 @@ class MemberService
     }
 
     /**
-     * 请求绑定银行卡 4.1.10
+     * 4.1.7 企业信息审核结果通知
+     *
+     * @param MemberRequest $request
+     * @return array|mixed
+     */
+    public function verifyResult(MemberRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'result' => $request->getResult(),
+            'checkTime' => $request->getCheckTime(),
+            'remark' => $request->getRemark(),
+            'failReason' => $request->getFailReason(),
+        ];
+
+        return app('allinpay')->AllinpayCurl('MemberService', 'verifyResult', $param);
+    }
+
+    /**
+     * 4.1.10 请求绑定银行卡
      *
      * @param MemberRequest $request
      * @return array|mixed
@@ -163,7 +182,7 @@ class MemberService
     {
         $param = [
             'bizUserId' => $request->getBizUserId(),
-            'cardNo' => app('allinpay')->RsaEncode($request->getCardNo()),
+            'cardNo' => $request->getCardNo() ? app('allinpay')->RsaEncode($request->getCardNo()) : null,
             'phone' => $request->getPhone(),
             'name' => $request->getName(),
             // 类型（身份证=1）目前只支持身份证
@@ -182,7 +201,7 @@ class MemberService
     }
 
     /**
-     * 确认绑定银行卡 4.1.11
+     * 4.1.11 确认绑定银行卡
      * @param MemberRequest $request
      * @return array|mixed
      */
@@ -201,7 +220,22 @@ class MemberService
     }
 
     /**
-     * 确认绑定银行卡 4.1.14
+     * 4.1.12 设置安全卡
+     * @param MemberRequest $request
+     * @return array|mixed
+     */
+    public function setSafeCard(MemberRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'cardNo' => $request->getCardNo() ? app('allinpay')->RsaEncode($request->getCardNo()) : null,
+            'setSafeCard' => $request->getSetSafeCard(),
+        ];
+        return app('allinpay')->AllinpayCurl('MemberService', 'setSafeCard', $param);
+    }
+
+    /**
+     * 4.1.14 解绑绑定银行卡
      * @param MemberRequest $request
      * @return array|mixed
      */
@@ -215,7 +249,7 @@ class MemberService
     }
 
     /**
-     * 查询绑定银行卡 4.1.13
+     * 4.1.13 查询绑定银行卡
      * @param MemberRequest $request
      * @return array|mixed
      */
@@ -223,13 +257,13 @@ class MemberService
     {
         $param = [
             'bizUserId' => $request->getBizUserId(),
-            'cardNo' => $request->getCardNo() ? app('allinpay')->RsaEncode($request->getCardNo()) : '',
+            'cardNo' => $request->getCardNo() ? app('allinpay')->RsaEncode($request->getCardNo()) : null,
         ];
         return app('allinpay')->AllinpayCurl('MemberService', 'queryBankCard', $param);
     }
 
     /**
-     * 查询卡 bin 4.1.9
+     * 4.1.9 查询卡 bin
      *
      * @param MemberRequest $request
      * @return array|mixed
@@ -237,9 +271,37 @@ class MemberService
     public function getBankCardBin(MemberRequest $request)
     {
         $param = [
-            'cardNo' => $request->getCardNo() ? app('allinpay')->RsaEncode($request->getCardNo()) : '',
+            'cardNo' => $request->getCardNo() ? app('allinpay')->RsaEncode($request->getCardNo()) : null,
         ];
         return app('allinpay')->AllinpayCurl('MemberService', 'getBankCardBin', $param);
+    }
+
+    /**
+     * 4.1.15 锁定会员
+     *
+     * @param MemberRequest $request
+     * @return array|mixed
+     */
+    public function lockMember(MemberRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+        ];
+        return app('allinpay')->AllinpayCurl('MemberService', 'lockMember', $param);
+    }
+
+    /**
+     * 4.1.16 解锁会员
+     *
+     * @param MemberRequest $request
+     * @return array|mixed
+     */
+    public function unlockMember(MemberRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+        ];
+        return app('allinpay')->AllinpayCurl('MemberService', 'unlockMember', $param);
     }
 
     /**
@@ -257,13 +319,13 @@ class MemberService
             'identityType' => $request->getIdentityType(),
             'identityNo' => $request->getIdentityNo() ? app('allinpay')->RsaEncode($request->getIdentityNo()) : null,
             'jumpUrl' => $request->getJumpUrl(),
-            'backUrl' => $request->getBackUrl()
+            'backUrl' => $request->getBackUrl(),
         ];
         return app('allinpay')->getPaymentCodeParams('MemberPwdService', 'setPayPwd', $param);
     }
 
     /**
-     * 4.1.17 修改支付密码【密码验证版】
+     * 4.1.18 修改支付密码【密码验证版】
      *
      * @param MemberRequest $request
      * @return array|mixed
@@ -272,18 +334,17 @@ class MemberService
     {
         $param = [
             'bizUserId' => $request->getBizUserId(),
-            'phone' => $request->getPhone(),
             'name' => $request->getName(),
             'identityType' => $request->getIdentityType(),
             'identityNo' => $request->getIdentityNo() ? app('allinpay')->RsaEncode($request->getIdentityNo()) : null,
             'jumpUrl' => $request->getJumpUrl(),
-            'backUrl' => $request->getBackUrl()
+            'backUrl' => $request->getBackUrl(),
         ];
         return app('allinpay')->getPaymentCodeParams('MemberPwdService', 'updatePayPwd', $param);
     }
 
     /**
-     * 4.1.17 重置支付密码【密码验证版】
+     * 4.1.19 重置支付密码【密码验证版】
      *
      * @param MemberRequest $request
      * @return array|mixed
@@ -297,8 +358,121 @@ class MemberService
             'identityType' => $request->getIdentityType(),
             'identityNo' => $request->getIdentityNo() ? app('allinpay')->RsaEncode($request->getIdentityNo()) : null,
             'jumpUrl' => $request->getJumpUrl(),
-            'backUrl' => $request->getBackUrl()
+            'backUrl' => $request->getBackUrl(),
         ];
         return app('allinpay')->AllinpayCurl('MemberPwdService', 'resetPayPwd', $param);
+    }
+
+    /**
+     * 4.1.20 修改绑定手机【密码验证版】
+     *
+     * @param MemberRequest $request
+     * @return array|mixed
+     */
+    public function updatePhoneByPayPwd(MemberRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'oldPhone' => $request->getPhone(),
+            'name' => $request->getName(),
+            'identityType' => $request->getIdentityType(),
+            'identityNo' => $request->getIdentityNo() ? app('allinpay')->RsaEncode($request->getIdentityNo()) : null,
+            'jumpUrl' => $request->getJumpUrl(),
+            'backUrl' => $request->getBackUrl(),
+        ];
+        return app('allinpay')->AllinpayCurl('MemberPwdService', 'updatePhoneByPayPwd', $param);
+    }
+
+    /**
+     * 4.1.21 会员收银宝渠道商户信息及终端信息绑定
+     *
+     * @param MemberRequest $request
+     * @return array|mixed
+     */
+    public function vspTermidService(MemberRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'operationType' => $request->getOperationType(),
+            'vspMerchantid' => $request->getVspMerchantid(),
+            'vspCusid' => $request->getVspCusid(),
+            'appid' => $request->getAppid(),
+            'vspTermid' => $request->getVspTermid(),
+        ];
+        return app('allinpay')->AllinpayCurl('MemberService', 'vspTermidService', $param);
+    }
+
+    /**
+     * 4.1.24 解绑手机(验证原手机短信验证码)
+     *
+     * @param MemberRequest $request
+     * @return array|mixed
+     */
+    public function unbindPhone(MemberRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'phone' => $request->getPhone(),
+            'verificationCode' => $request->getVerificationCode(),
+        ];
+        return app('allinpay')->AllinpayCurl('MemberService', 'unbindPhone', $param);
+    }
+
+    /**
+     * 4.1.25 修改绑定手机(银行卡验证)
+     *
+     * @param MemberRequest $request
+     * @return array|mixed
+     */
+    public function bankCardChangeBindPhone(MemberRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'cardNo' => $request->getCardNo() ? app('allinpay')->RsaEncode($request->getCardNo()) : null,
+            'phone' => $request->getPhone(),
+            'name' => $request->getName(),
+            'cardCheck' => $request->getCardCheck(), // 2-ITS 四要素+短信 6-通联通协议支付签约 7-收银宝快捷支付签约
+            'identityType' => $request->getIdentityType(),
+            'identityNo' => $request->getIdentityNo() ? app('allinpay')->RsaEncode($request->getIdentityNo()) : null,
+            'validate' => $request->getValidate(),
+            'cvv2' => $request->getCvv2() ? app('allinpay')->RsaEncode($request->getCvv2()) : null,
+        ];
+        return app('allinpay')->AllinpayCurl('MemberService', 'bankCardChangeBindPhone', $param);
+    }
+
+    /**
+     * 4.1.26 确定修改绑定手机(银行卡验证)
+     *
+     * @param MemberRequest $request
+     * @return array|mixed
+     */
+    public function verifyBankCardChangeBindPhone(MemberRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'tranceNum' => $request->getTranceNum(),
+            'transDate' => $request->getTransDate(),
+            'phone' => $request->getPhone(),
+            'verificationCode' => $request->getVerificationCode(),
+            'validate' => $request->getValidate(),
+            'cvv2' => $request->getCvv2() ? app('allinpay')->RsaEncode($request->getCvv2()) : null,
+        ];
+        return app('allinpay')->AllinpayCurl('MemberService', 'verifyBankCardChangeBindPhone', $param);
+    }
+
+    /**
+     * 4.1.27 子账户开户
+     *
+     * @param MemberRequest $request
+     * @return array|mixed
+     */
+    public function createBankSubAcctNo(MemberRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'accountSetNo' => $request->getAccountSetNo(),
+            'acctOrgType' => $request->getAcctOrgType(),
+        ];
+        return app('allinpay')->AllinpayCurl('MemberService', 'createBankSubAcctNo', $param);
     }
 }

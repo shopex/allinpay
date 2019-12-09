@@ -50,6 +50,11 @@ class OrderRequest
     private $sourceAccountSetNo;
     private $targetBizUserId;
     private $targetAccountSetNo;
+    private $bizFreezenNo;
+    private $dateStart;
+    private $dateEnd;
+    private $startPosition;
+    private $queryNum;
 
     /**
      * @return mixed
@@ -769,5 +774,85 @@ class OrderRequest
     public function setTargetAccountSetNo($targetAccountSetNo): void
     {
         $this->targetAccountSetNo = $targetAccountSetNo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBizFreezenNo()
+    {
+        return $this->bizFreezenNo;
+    }
+
+    /**
+     * @param mixed $bizFreezenNo
+     */
+    public function setBizFreezenNo($bizFreezenNo): void
+    {
+        $this->bizFreezenNo = $bizFreezenNo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateStart()
+    {
+        return $this->dateStart;
+    }
+
+    /**
+     * @param mixed $dateStart
+     */
+    public function setDateStart($dateStart): void
+    {
+        $this->dateStart = $dateStart;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateEnd()
+    {
+        return $this->dateEnd;
+    }
+
+    /**
+     * @param mixed $dateEnd
+     */
+    public function setDateEnd($dateEnd): void
+    {
+        $this->dateEnd = $dateEnd;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStartPosition()
+    {
+        return $this->startPosition;
+    }
+
+    /**
+     * @param mixed $startPosition
+     */
+    public function setStartPosition($startPosition): void
+    {
+        $this->startPosition = $startPosition;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQueryNum()
+    {
+        return $this->queryNum;
+    }
+
+    /**
+     * @param mixed $queryNum
+     */
+    public function setQueryNum($queryNum): void
+    {
+        $this->queryNum = $queryNum;
     }
 }

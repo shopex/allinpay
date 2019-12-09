@@ -12,19 +12,17 @@ use Tonglian\Allinpay\Requests\OrderRequest;
 class OrderService
 {
     /**
-     * 托管代收申请-简化版
+     * 4.2.2 充值申请
      *
      * @param OrderRequest $request
      * @return array|mixed
      */
-    public function agentCollectApplySimplifyCheck(OrderRequest $request)
+    public function depositApply(OrderRequest $request)
     {
         $param = [
             'bizOrderNo' => $request->getBizOrderNo(),
-            'payerId' => $request->getPayerId(),
-            'goodsType' => $request->getGoodsType(),
-            'bizGoodsNo' => $request->getBizGoodsNo(),
-            'tradeCode' => $request->getTradeCode(),
+            'bizUserId' => $request->getBizUserId(),
+            'accountSetNo' => $request->getAccountSetNo(),
             'amount' => $request->getAmount(),
             'fee' => $request->getFee(),
             'validateType' => $request->getValidateType(),
@@ -41,11 +39,75 @@ class OrderService
             'extendInfo' => $request->getExtendInfo(),
         ];
 
-        return app('allinpay')->AllinpayCurl('OrderService', 'agentCollectApplySimplifyCheck', $param);
+        return app('allinpay')->AllinpayCurl('OrderService', 'depositApply', $param);
     }
 
     /**
-     * 托管代收申请-标准版
+     * 4.2.3 提现申请
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+    public function withdrawApply(OrderRequest $request)
+    {
+        $param = [
+            'bizOrderNo' => $request->getBizOrderNo(),
+            'bizUserId' => $request->getBizUserId(),
+            'accountSetNo' => $request->getAccountSetNo(),
+            'amount' => $request->getAmount(),
+            'fee' => $request->getFee(),
+            'validateType' => $request->getValidateType(),
+            'backUrl' => $request->getBackUrl(),
+            'orderExpireDatetime' => $request->getOrderExpireDatetime(),
+            'payMethod' => $request->getPayMethod(),
+            'bankCardNo' => $request->getBankCardNo() ? app('allinpay')->RsaEncode($request->getBankCardNo()) : null,
+            'bankCardPro' => $request->getBankCardPro(),
+            'withdrawType' => $request->getWithdrawType(),
+            'industryCode' => $request->getIndustryCode(),
+            'industryName' => $request->getIndustryName(),
+            'source' => $request->getSource(),
+            'summary' => $request->getSummary(),
+            'extendInfo' => $request->getExtendInfo(),
+        ];
+
+        return app('allinpay')->AllinpayCurl('OrderService', 'withdrawApply', $param);
+    }
+
+    /**
+     * 4.2.4 消费申请
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+    public function consumeApply(OrderRequest $request)
+    {
+        $param = [
+            'payerId' => $request->getPayerId(),
+            'recieverId' => $request->getRecieverId(),
+            'bizOrderNo' => $request->getBizOrderNo(),
+            'amount' => $request->getAmount(),
+            'fee' => $request->getFee(),
+            'validateType' => $request->getValidateType(),
+            'splitRule' => $request->getSplitRule(),
+            'frontUrl' => $request->getFrontUrl(),
+            'backUrl' => $request->getBackUrl(),
+            'orderExpireDatetime' => $request->getOrderExpireDatetime(),
+            'payMethod' => $request->getPayMethod(),
+            'goodsType' => $request->getGoodsType(),
+            'bizGoodsNo' => $request->getBizGoodsNo(),
+            'goodsName' => $request->getGoodsName(),
+            'goodsDesc' => $request->getGoodsDesc(),
+            'industryCode' => $request->getIndustryCode(),
+            'industryName' => $request->getIndustryName(),
+            'source' => $request->getSource(),
+            'summary' => $request->getSummary(),
+            'extendInfo' => $request->getExtendInfo(),
+        ];
+        return app('allinpay')->AllinpayCurl('OrderService', 'consumeApply', $param);
+    }
+
+    /**
+     * 4.2.5 托管代收申请(标准版)
      *
      * @param OrderRequest $request
      * @return array
@@ -79,34 +141,7 @@ class OrderService
     }
 
     /**
-     * 单笔代付-简化版
-     * @param OrderRequest $request
-     * @return array|mixed
-     */
-    public function signalAgentPaySimplifyCheck(OrderRequest $request)
-    {
-        $param = [
-            'bizOrderNo' => $request->getBizOrderNo(),
-            'collectbizOrderNo' => $request->getCollectBizOrderNo(),
-            'bizUserId' => $request->getBizUserId(),
-            'accountSetNo' => $request->getAccountSetNo(),
-            'backUrl' => $request->getBackUrl(),
-            'payToBankCardInfo' => $request->getPayToBankCardInfo(),
-            'amount' => $request->getAmount(),
-            'fee' => $request->getFee(),
-            'splitRuleList' => $request->getSplitRuleList(),
-            'goodsType' => $request->getGoodsType(),
-            'bizGoodsNo' => $request->getBizGoodsNo(),
-            'tradeCode' => $request->getTradeCode(),
-            'summary' => $request->getSummary(),
-            'extendInfo' => $request->getExtendInfo(),
-        ];
-
-        return app('allinpay')->AllinpayCurl('OrderService', 'signalAgentPaySimplifyCheck', $param);
-    }
-
-    /**
-     * 托管代付申请
+     * 4.2.6 单笔托管代付(标准版)
      *
      * @param OrderRequest $request
      * @return array
@@ -132,36 +167,73 @@ class OrderService
     }
 
     /**
-     * 消费申请
+     * 4.2.7 批量托管代付（标准版）
      *
      * @param OrderRequest $request
      * @return array|mixed
      */
-    public function consumeApply(OrderRequest $request)
+    public function batchAgentPay(OrderRequest $request)
     {
         $param = [
-            'payerId' => $request->getPayerId(),
-            'recieverId' => $request->getRecieverId(),
-            'bizOrderNo' => $request->getBizOrderNo(),
-            'amount' => $request->getAmount(),
-            'fee' => $request->getFee(),
-            'validateType' => $request->getValidateType(),
-            'splitRule' => $request->getSplitRule(),
-            'frontUrl' => $request->getFrontUrl(),
-            'backUrl' => $request->getBackUrl(),
-            'orderExpireDatetime' => $request->getOrderExpireDatetime(),
-            'payMethod' => $request->getPayMethod(),
-            'goodsType' => $request->getGoodsType(),
+            'bizBatchNo' => $request->getBizBatchNo(),
+            'batchPayList' => $request->getBatchPayList(),
+            'goodsType' => $request->getgoodsType(),
             'bizGoodsNo' => $request->getBizGoodsNo(),
-            'goodsName' => $request->getGoodsName(),
-            'goodsDesc' => $request->getGoodsDesc(),
-            'industryCode' => $request->getIndustryCode(),
-            'industryName' => $request->getIndustryName(),
-            'source' => $request->getSource(),
-            'summary' => $request->getSummary(),
-            'extendInfo' => $request->getExtendInfo(),
+            'tradeCode' => $request->gettradeCode(),
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'consumeApply', $param);
+        return app('allinpay')->AllinpayCurl('OrderService', 'batchAgentPay', $param);
+    }
+
+    /**
+     * 4.2.8 确认支付(后台+短信验证码确认)
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+    public function pay(OrderRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'bizOrderNo' => $request->getBizOrderNo(),
+            'tradeNo' => $request->getTradeNo(),
+            'verificationCode' => $request->getVerificationCode(),
+            'consumerIp' => $request->getConsumerIp(),
+        ];
+        return app('allinpay')->AllinpayCurl('OrderService', 'pay', $param);
+    }
+
+    /**
+     * 4.2.13 冻结金额
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+    public function freezeMoney(OrderRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'bizFreezenNo' => $request->getBizFreezenNo(),
+            'accountSetNo' => $request->getAccountSetNo(),
+            'amount' => $request->getAmount(),
+        ];
+        return app('allinpay')->AllinpayCurl('OrderService', 'freezeMoney', $param);
+    }
+
+    /**
+     * 4.2.14 解冻金额
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+    public function unfreezeMoney(OrderRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'bizFreezenNo' => $request->getBizFreezenNo(),
+            'accountSetNo' => $request->getAccountSetNo(),
+            'amount' => $request->getAmount(),
+        ];
+        return app('allinpay')->AllinpayCurl('OrderService', 'unfreezeMoney', $param);
     }
 
     /**
@@ -188,87 +260,6 @@ class OrderService
     }
 
     /**
-     * 提现申请
-     *
-     * @param OrderRequest $request
-     * @return array|mixed
-     */
-    public function withdrawApply(OrderRequest $request)
-    {
-        $param = [
-            'bizOrderNo' => $request->getBizOrderNo(),
-            'bizUserId' => $request->getBizUserId(),
-            'accountSetNo' => $request->getAccountSetNo(),
-            'amount' => $request->getAmount(),
-            'fee' => $request->getFee(),
-            'validateType' => $request->getValidateType(),
-            'backUrl' => $request->getBackUrl(),
-            'orderExpireDatetime' => $request->getOrderExpireDatetime(),
-            'payMethod' => $request->getPayMethod(),
-            'bankCardNo' => $request->getBankCardNo() ? app('allinpay')->RsaEncode($request->getBankCardNo()) : '',
-            'bankCardPro' => $request->getBankCardPro(),
-            'withdrawType' => $request->getWithdrawType(),
-            'industryCode' => $request->getIndustryCode(),
-            'industryName' => $request->getIndustryName(),
-            'source' => $request->getSource(),
-            'summary' => $request->getSummary(),
-            'extendInfo' => $request->getExtendInfo(),
-        ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'withdrawApply', $param);
-    }
-
-    /**
-     * 确认支付(后台+短信验证码确认)
-     *
-     * @param OrderRequest $request
-     * @return array|mixed
-     */
-    public function pay(OrderRequest $request)
-    {
-        $param = [
-            'bizUserId' => $request->getBizUserId(),
-            'bizOrderNo' => $request->getBizOrderNo(),
-            'tradeNo' => $request->getTradeNo(),
-            'verificationCode' => $request->getVerificationCode(),
-            'consumerIp' => $request->getConsumerIp(),
-        ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'pay', $param);
-    }
-
-    /**
-     * 查询余额
-     *
-     * @param OrderRequest $request
-     * @return array|mixed
-     */
-    public function queryBalance(OrderRequest $request)
-    {
-        $param = [
-            'bizUserId' => $request->getBizUserId(),
-            'accountSetNo' => $request->getAccountSetNo(),
-        ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'queryBalance', $param);
-    }
-
-    /**
-     * 4.2.7 批量托管代付（标准版）
-     *
-     * @param OrderRequest $request
-     * @return array|mixed
-     */
-    public function batchAgentPay(OrderRequest $request)
-    {
-        $param = [
-            'bizBatchNo' => $request->getBizBatchNo(),
-            'batchPayList' => $request->getBatchPayList(),
-            'goodsType' => $request->getgoodsType(),
-            'bizGoodsNo' => $request->getBizGoodsNo(),
-            'tradeCode' => $request->gettradeCode(),
-        ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'batchAgentPay', $param);
-    }
-
-    /**
      * 4.2.17 平台转账
      *
      * @param OrderRequest $request
@@ -288,6 +279,21 @@ class OrderService
     }
 
     /**
+     * 4.2.18 查询余额
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+    public function queryBalance(OrderRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'accountSetNo' => $request->getAccountSetNo(),
+        ];
+        return app('allinpay')->AllinpayCurl('OrderService', 'queryBalance', $param);
+    }
+
+    /**
      * 4.2.19 查询订单状态
      *
      * @param OrderRequest $request
@@ -299,6 +305,120 @@ class OrderService
             'bizOrderNo' => $request->getBizOrderNo()
         ];
         return app('allinpay')->AllinpayCurl('OrderService', 'getOrderDetail', $param);
+    }
+
+    /**
+     * 4.2.20 查询账户收支明细
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+    public function queryInExpDetail(OrderRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'accountSetNo' => $request->getAccountSetNo(),
+            'dateStart' => $request->getDateStart(),
+            'dateEnd' => $request->getDateEnd(),
+            'startPosition' => $request->getStartPosition(),
+            'queryNum' => $request->getQueryNum(),
+        ];
+        return app('allinpay')->AllinpayCurl('OrderService', 'queryInExpDetail', $param);
+    }
+
+    /**
+     * 4.2.21 付款方资金代付明细查询
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+    public function getPaymentInformationDetail(OrderRequest $request)
+    {
+        $param = [
+            'bizOrderNo' => $request->getBizOrderNo(),
+            'bizUserId' => $request->getBizUserId(),
+            'accountSetNo' => $request->getAccountSetNo(),
+            'dateStart' => $request->getDateStart(),
+            'dateEnd' => $request->getDateEnd(),
+        ];
+        return app('allinpay')->AllinpayCurl('OrderService', 'getPaymentInformationDetail', $param);
+    }
+
+    /**
+     * 4.2.22 收款方在途资金明细查询
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+    public function getPayeeFundsInTransitDetail(OrderRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'accountSetNo' => $request->getAccountSetNo(),
+            'bizOrderNo' => $request->getBizOrderNo(),
+            'dateStart' => $request->getDateStart(),
+            'dateEnd' => $request->getDateEnd(),
+        ];
+        return app('allinpay')->AllinpayCurl('OrderService', 'getPayeeFundsInTransitDetail', $param);
+    }
+
+    /**
+     * 4.2.23 跨境提现申请
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+    public function crossBorderWithdrawApply(OrderRequest $request)
+    {
+        $param = [
+            'bizOrderNo' => $request->getBizOrderNo(),
+            'bizUserId' => $request->getBizUserId(),
+            'accountSetNo' => $request->getAccountSetNo(),
+            'amount' => $request->getAmount(),
+            'fee' => $request->getFee(),
+            'validateType' => $request->getValidateType(),
+            'backUrl' => $request->getBackUrl(),
+            'orderExpireDatetime' => $request->getOrderExpireDatetime(),
+            'payMethod' => $request->getPayMethod(),
+            'crossBorderbizUserId' => $request->getCrossBorderbizUserId(),
+            'bankCardNo' => $request->getBankCardNo() ? app('allinpay')->RsaEncode($request->getBankCardNo()) : null,
+            'bankCardPro' => $request->getBankCardPro(),
+            'withdrawType' => $request->getWithdrawType(),
+            'industryCode' => $request->getIndustryCode(),
+            'industryName' => $request->getIndustryName(),
+            'source' => $request->getSource(),
+            'summary' => $request->getSummary(),
+            'extendInfo' => $request->getExtendInfo(),
+        ];
+        return app('allinpay')->AllinpayCurl('OrderService', 'crossBorderWithdrawApply', $param);
+    }
+
+    /**
+     * 4.2.24 订单分账明细查询
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+    public function getOrderSplitRuleListDetail(OrderRequest $request)
+    {
+        $param = [
+            'bizOrderNo' => $request->getBizOrderNo(),
+        ];
+        return app('allinpay')->AllinpayCurl('OrderService', 'getOrderSplitRuleListDetail', $param);
+    }
+
+    /**
+     * 4.2.25 重发支付短信验证码
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+    public function resendPaySMS(OrderRequest $request)
+    {
+        $param = [
+            'bizOrderNo' => $request->getBizOrderNo(),
+        ];
+        return app('allinpay')->AllinpayCurl('OrderService', 'resendPaySMS', $param);
     }
 
 }
