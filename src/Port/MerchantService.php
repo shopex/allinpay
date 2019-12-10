@@ -7,10 +7,16 @@
 
 namespace Tonglian\Allinpay\Port;
 
+use Tonglian\Allinpay\Common\AllinpayClient;
 use Tonglian\Allinpay\Requests\MerchantRequest;
 
 class MerchantService
 {
+    private $allinpay;
+
+    public function __construct($config) {
+        $this->allinpay = new AllinpayClient($config);
+    }
 
     /**
      * 4.3.1 通联通头寸查询
@@ -23,7 +29,7 @@ class MerchantService
         $param = [
             'sysid' => $request->getSysid(),
         ];
-        return app('allinpay')->AllinpayCurl('MerchantService', 'queryReserveFundBalance', $param);
+        return $this->allinpay->AllinpayCurl('MerchantService', 'queryReserveFundBalance', $param);
     }
 
     /**
@@ -39,8 +45,15 @@ class MerchantService
             'fileType'    =>  $request->getFileType(),
         ];
 
-        return app('allinpay')->AllinpayCurl('MerchantService', 'getCheckAccountFile', $param);
+        return $this->allinpay->AllinpayCurl('MerchantService', 'getCheckAccountFile', $param);
     }
+
+    /**
+     * 4.3.3 通联通划款入账通知[回调]
+     *
+     * @param MerchantRequest $request
+     * @return array
+     */
 
     /**
      * 4.3.4 平台账户集余额查询
@@ -54,7 +67,7 @@ class MerchantService
             'accountSetNo'    =>  $request->getAccountSetNo(),
         ];
 
-        return app('allinpay')->AllinpayCurl('MerchantService', 'queryMerchantBalance', $param);
+        return $this->allinpay->AllinpayCurl('MerchantService', 'queryMerchantBalance', $param);
     }
 
     /**
@@ -71,7 +84,7 @@ class MerchantService
             'acctName'    =>  $request->getAcctName(),
         ];
 
-        return app('allinpay')->AllinpayCurl('MerchantService', 'queryBankBalance', $param);
+        return $this->allinpay->AllinpayCurl('MerchantService', 'queryBankBalance', $param);
     }
 
 }

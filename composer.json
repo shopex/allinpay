@@ -1,5 +1,5 @@
 {
-    "name": "huangjinbing/allinpay",
+    "name": "shopex/allinpay",
     "description": "how to develop a laravel package",
     "license": "MIT",
     "authors": [
@@ -10,11 +10,19 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=7.1"
+        "php": ">=7.1",
+        "monolog/monolog": "^1.23"
     },
     "autoload": {
-        "psr-0": {
-           "Tonglian\\Allinpay\\": "src/"
+        "psr-4": {
+            "Tonglian\\Allinpay\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Tonglian\\Allinpay\\Providers\\AllinpayApiProvider"
+            ]
         }
     }
 }

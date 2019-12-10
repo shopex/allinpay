@@ -18,7 +18,7 @@ use Throwable;
  */
 class ConfigException extends \Exception
 {
-    public function __construct(string $message = "", int $code = 0, Throwable $previous = null)
+    public function __construct(string $message, int $code, Throwable $previous = null)
     {
         parent::__construct("通联配置错误:" . $message, $code, $previous);
     }

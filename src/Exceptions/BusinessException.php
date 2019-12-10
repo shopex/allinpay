@@ -12,7 +12,7 @@ use Throwable;
 
 class BusinessException extends \Exception
 {
-    public function __construct(string $message = "", int $code = 0, Throwable $previous = null)
+    public function __construct(string $message, int $code, Throwable $previous = null)
     {
         parent::__construct("通联业务异常:" . $message, $code, $previous);
     }

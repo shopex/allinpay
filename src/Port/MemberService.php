@@ -7,10 +7,17 @@
 
 namespace Tonglian\Allinpay\Port;
 
+use Tonglian\Allinpay\Common\AllinpayClient;
 use Tonglian\Allinpay\Requests\MemberRequest;
 
 class MemberService
 {
+    private $allinpay;
+
+    public function __construct($config) {
+        $this->allinpay = new AllinpayClient($config);
+    }
+
     /**
      * 4.1.1 创建会员
      *
@@ -26,22 +33,7 @@ class MemberService
             'extendParam' => $request->getExtendParam(),
         ];
 
-        return app('allinpay')->AllinpayCurl('MemberService', 'createMember', $param);
-    }
-
-    /**
-     * 4.1.8 获取会员信息
-     *
-     * @param MemberRequest $request
-     * @return array
-     */
-    public function getMemberInfo(MemberRequest $request)
-    {
-        $param = [
-            'bizUserId' => $request->getBizUserId(),
-        ];
-
-        return app('allinpay')->AllinpayCurl('MemberService', 'getMemberInfo', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'createMember', $param);
     }
 
     /**
@@ -57,7 +49,7 @@ class MemberService
             'phone' => $request->getPhone(),
             'verificationCodeType' => $request->getVerificationCodeType(),
         ];
-        return app('allinpay')->AllinpayCurl('MemberService', 'sendVerificationCode', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'sendVerificationCode', $param);
     }
 
     /**
@@ -73,27 +65,7 @@ class MemberService
             'phone' => $request->getPhone(),
             'verificationCode' => $request->getVerificationCode(),
         ];
-        return app('allinpay')->AllinpayCurl('MemberService', 'bindPhone', $param);
-    }
-
-
-    /**
-     * 4.1.23 会员绑定支付账户用户标识
-     *
-     * @param MemberRequest $request
-     * @return array|mixed
-     */
-    public function applyBindAcct(MemberRequest $request)
-    {
-        $param = [
-            'bizUserId' => $request->getBizUserId(),
-            'operationType' => $request->getOperationType(),
-            // weChatPublic -微信公众号 weChatMiniProgram -微信小程序 aliPayService -支付宝生活号
-            'acctType' => $request->getAcctType(),
-            // 微信公众号支付 openid——微信分配 微信小程序支付 openid——微信分配 支付宝生活号支付 user_id——支付宝分配 附：openid 示例 oUpF8uMuAJO_M2pxb1Q9zNjWeS6o
-            'acct' => $request->getAcct(),
-        ];
-        return app('allinpay')->AllinpayCurl('MemberService', 'applyBindAcct', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'bindPhone', $param);
     }
 
     /**
@@ -109,7 +81,7 @@ class MemberService
             'backUrl' => $request->getBackUrl(),
             'source' => $request->getSource(),
         ];
-        return app('allinpay')->getPaymentCodeParams('MemberService', 'signContract', $param);
+        return $this->allinpay->getPaymentCodeParams('MemberService', 'signContract', $param);
     }
 
     /**
@@ -126,11 +98,11 @@ class MemberService
             // 类型（身份证=1）目前只支持身份证
             'identityType' => $request->getIdentityType(),
             // RSA 加密
-            'identityNo' => app('allinpay')->RsaEncode($request->getIdentityNo()),
+            'identityNo' => $this->allinpay->RsaEncode($request->getIdentityNo()),
             'isAuth' => $request->getIsAuth(),
         ];
 
-        return app('allinpay')->AllinpayCurl('MemberService', 'setRealName', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'setRealName', $param);
     }
 
     /**
@@ -143,14 +115,14 @@ class MemberService
     {
         $param = [
             'bizUserId' => $request->getBizUserId(),
-            'backUrl' => $request->getBackUrl() ?? '',
+            'backUrl' => $request->getBackUrl(),
             // JSONObject
             'companyBasicInfo' => $request->getCompanyBasicInfo(),
             'isAuth' => $request->getIsAuth(),
             'companyExtendInfo' => $request->getCompanyExtendInfo(),
         ];
 
-        return app('allinpay')->AllinpayCurl('MemberService', 'setCompanyInfo', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'setCompanyInfo', $param);
     }
 
     /**
@@ -159,17 +131,34 @@ class MemberService
      * @param MemberRequest $request
      * @return array|mixed
      */
-    public function verifyResult(MemberRequest $request)
+
+    /**
+     * 4.1.8 获取会员信息
+     *
+     * @param MemberRequest $request
+     * @return array
+     */
+    public function getMemberInfo(MemberRequest $request)
     {
         $param = [
             'bizUserId' => $request->getBizUserId(),
-            'result' => $request->getResult(),
-            'checkTime' => $request->getCheckTime(),
-            'remark' => $request->getRemark(),
-            'failReason' => $request->getFailReason(),
         ];
 
-        return app('allinpay')->AllinpayCurl('MemberService', 'verifyResult', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'getMemberInfo', $param);
+    }
+
+    /**
+     * 4.1.9 查询卡 bin
+     *
+     * @param MemberRequest $request
+     * @return array|mixed
+     */
+    public function getBankCardBin(MemberRequest $request)
+    {
+        $param = [
+            'cardNo' => $request->getCardNo() ? $this->allinpay->RsaEncode($request->getCardNo()) : null,
+        ];
+        return $this->allinpay->AllinpayCurl('MemberService', 'getBankCardBin', $param);
     }
 
     /**
@@ -182,22 +171,22 @@ class MemberService
     {
         $param = [
             'bizUserId' => $request->getBizUserId(),
-            'cardNo' => $request->getCardNo() ? app('allinpay')->RsaEncode($request->getCardNo()) : null,
+            'cardNo' => $request->getCardNo() ? $this->allinpay->RsaEncode($request->getCardNo()) : null,
             'phone' => $request->getPhone(),
             'name' => $request->getName(),
             // 类型（身份证=1）目前只支持身份证
             'identityType' => $request->getIdentityType(),
-            'identityNo' => app('allinpay')->RsaEncode($request->getIdentityNo()),
+            'identityNo' => $this->allinpay->RsaEncode($request->getIdentityNo()),
 
             // 以下为非必填
             'cardCheck' => $request->getCardCheck(),
             'validate' => $request->getValidate(),
-            'cvv2' => $request->getCvv2() ? app('allinpay')->RsaEncode($request->getCvv2()) : null,
+            'cvv2' => $request->getCvv2() ? $this->allinpay->RsaEncode($request->getCvv2()) : null,
             'isSafeCard' => $request->getIsSafeCard(),
             'unionBank' => $request->getUnionBank(),
         ];
 
-        return app('allinpay')->AllinpayCurl('MemberService', 'applyBindBankCard', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'applyBindBankCard', $param);
     }
 
     /**
@@ -212,11 +201,11 @@ class MemberService
             'tranceNum' => $request->getTranceNum(),
             'transDate' => $request->getTransDate(),
             'phone' => $request->getPhone(),
-            'validate' => $request->getvalidate() ? app('allinpay')->RsaEncode($request->getvalidate()) : null,
-            'cvv2' => $request->getCvv2() ? app('allinpay')->RsaEncode($request->getCvv2()) : null,
+            'validate' => $request->getvalidate() ? $this->allinpay->RsaEncode($request->getvalidate()) : null,
+            'cvv2' => $request->getCvv2() ? $this->allinpay->RsaEncode($request->getCvv2()) : null,
             'verificationCode' => $request->getVerificationCode(),
         ];
-        return app('allinpay')->AllinpayCurl('MemberService', 'bindBankCard', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'bindBankCard', $param);
     }
 
     /**
@@ -228,24 +217,10 @@ class MemberService
     {
         $param = [
             'bizUserId' => $request->getBizUserId(),
-            'cardNo' => $request->getCardNo() ? app('allinpay')->RsaEncode($request->getCardNo()) : null,
+            'cardNo' => $request->getCardNo() ? $this->allinpay->RsaEncode($request->getCardNo()) : null,
             'setSafeCard' => $request->getSetSafeCard(),
         ];
-        return app('allinpay')->AllinpayCurl('MemberService', 'setSafeCard', $param);
-    }
-
-    /**
-     * 4.1.14 解绑绑定银行卡
-     * @param MemberRequest $request
-     * @return array|mixed
-     */
-    public function unbindBankCard(MemberRequest $request)
-    {
-        $param = [
-            'bizUserId' => $request->getBizUserId(),
-            'cardNo' => $request->getCardNo() ? app('allinpay')->RsaEncode($request->getCardNo()) : null,
-        ];
-        return app('allinpay')->AllinpayCurl('MemberService', 'unbindBankCard', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'setSafeCard', $param);
     }
 
     /**
@@ -257,23 +232,23 @@ class MemberService
     {
         $param = [
             'bizUserId' => $request->getBizUserId(),
-            'cardNo' => $request->getCardNo() ? app('allinpay')->RsaEncode($request->getCardNo()) : null,
+            'cardNo' => $request->getCardNo() ? $this->allinpay->RsaEncode($request->getCardNo()) : null,
         ];
-        return app('allinpay')->AllinpayCurl('MemberService', 'queryBankCard', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'queryBankCard', $param);
     }
 
     /**
-     * 4.1.9 查询卡 bin
-     *
+     * 4.1.14 解绑绑定银行卡
      * @param MemberRequest $request
      * @return array|mixed
      */
-    public function getBankCardBin(MemberRequest $request)
+    public function unbindBankCard(MemberRequest $request)
     {
         $param = [
-            'cardNo' => $request->getCardNo() ? app('allinpay')->RsaEncode($request->getCardNo()) : null,
+            'bizUserId' => $request->getBizUserId(),
+            'cardNo' => $request->getCardNo() ? $this->allinpay->RsaEncode($request->getCardNo()) : null,
         ];
-        return app('allinpay')->AllinpayCurl('MemberService', 'getBankCardBin', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'unbindBankCard', $param);
     }
 
     /**
@@ -287,7 +262,7 @@ class MemberService
         $param = [
             'bizUserId' => $request->getBizUserId(),
         ];
-        return app('allinpay')->AllinpayCurl('MemberService', 'lockMember', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'lockMember', $param);
     }
 
     /**
@@ -301,7 +276,7 @@ class MemberService
         $param = [
             'bizUserId' => $request->getBizUserId(),
         ];
-        return app('allinpay')->AllinpayCurl('MemberService', 'unlockMember', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'unlockMember', $param);
     }
 
     /**
@@ -317,11 +292,11 @@ class MemberService
             'phone' => $request->getPhone(),
             'name' => $request->getName(),
             'identityType' => $request->getIdentityType(),
-            'identityNo' => $request->getIdentityNo() ? app('allinpay')->RsaEncode($request->getIdentityNo()) : null,
+            'identityNo' => $request->getIdentityNo() ? $this->allinpay->RsaEncode($request->getIdentityNo()) : null,
             'jumpUrl' => $request->getJumpUrl(),
             'backUrl' => $request->getBackUrl(),
         ];
-        return app('allinpay')->getPaymentCodeParams('MemberPwdService', 'setPayPwd', $param);
+        return $this->allinpay->getPaymentCodeParams('MemberPwdService', 'setPayPwd', $param);
     }
 
     /**
@@ -336,11 +311,11 @@ class MemberService
             'bizUserId' => $request->getBizUserId(),
             'name' => $request->getName(),
             'identityType' => $request->getIdentityType(),
-            'identityNo' => $request->getIdentityNo() ? app('allinpay')->RsaEncode($request->getIdentityNo()) : null,
+            'identityNo' => $request->getIdentityNo() ? $this->allinpay->RsaEncode($request->getIdentityNo()) : null,
             'jumpUrl' => $request->getJumpUrl(),
             'backUrl' => $request->getBackUrl(),
         ];
-        return app('allinpay')->getPaymentCodeParams('MemberPwdService', 'updatePayPwd', $param);
+        return $this->allinpay->getPaymentCodeParams('MemberPwdService', 'updatePayPwd', $param);
     }
 
     /**
@@ -356,11 +331,11 @@ class MemberService
             'phone' => $request->getPhone(),
             'name' => $request->getName(),
             'identityType' => $request->getIdentityType(),
-            'identityNo' => $request->getIdentityNo() ? app('allinpay')->RsaEncode($request->getIdentityNo()) : null,
+            'identityNo' => $request->getIdentityNo() ? $this->allinpay->RsaEncode($request->getIdentityNo()) : null,
             'jumpUrl' => $request->getJumpUrl(),
             'backUrl' => $request->getBackUrl(),
         ];
-        return app('allinpay')->AllinpayCurl('MemberPwdService', 'resetPayPwd', $param);
+        return $this->allinpay->AllinpayCurl('MemberPwdService', 'resetPayPwd', $param);
     }
 
     /**
@@ -376,11 +351,11 @@ class MemberService
             'oldPhone' => $request->getPhone(),
             'name' => $request->getName(),
             'identityType' => $request->getIdentityType(),
-            'identityNo' => $request->getIdentityNo() ? app('allinpay')->RsaEncode($request->getIdentityNo()) : null,
+            'identityNo' => $request->getIdentityNo() ? $this->allinpay->RsaEncode($request->getIdentityNo()) : null,
             'jumpUrl' => $request->getJumpUrl(),
             'backUrl' => $request->getBackUrl(),
         ];
-        return app('allinpay')->AllinpayCurl('MemberPwdService', 'updatePhoneByPayPwd', $param);
+        return $this->allinpay->AllinpayCurl('MemberPwdService', 'updatePhoneByPayPwd', $param);
     }
 
     /**
@@ -399,7 +374,33 @@ class MemberService
             'appid' => $request->getAppid(),
             'vspTermid' => $request->getVspTermid(),
         ];
-        return app('allinpay')->AllinpayCurl('MemberService', 'vspTermidService', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'vspTermidService', $param);
+    }
+
+    /**
+     * 4.1.22 当面付标准模式支付及收银宝 POS 订单支付订单补登[回调]
+     *
+     * @param MemberRequest $request
+     * @return array|mixed
+     */
+
+    /**
+     * 4.1.23 会员绑定支付账户用户标识
+     *
+     * @param MemberRequest $request
+     * @return array|mixed
+     */
+    public function applyBindAcct(MemberRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'operationType' => $request->getOperationType(),
+            // weChatPublic -微信公众号 weChatMiniProgram -微信小程序 aliPayService -支付宝生活号
+            'acctType' => $request->getAcctType(),
+            // 微信公众号支付 openid——微信分配 微信小程序支付 openid——微信分配 支付宝生活号支付 user_id——支付宝分配 附：openid 示例 oUpF8uMuAJO_M2pxb1Q9zNjWeS6o
+            'acct' => $request->getAcct(),
+        ];
+        return $this->allinpay->AllinpayCurl('MemberService', 'applyBindAcct', $param);
     }
 
     /**
@@ -415,7 +416,7 @@ class MemberService
             'phone' => $request->getPhone(),
             'verificationCode' => $request->getVerificationCode(),
         ];
-        return app('allinpay')->AllinpayCurl('MemberService', 'unbindPhone', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'unbindPhone', $param);
     }
 
     /**
@@ -428,16 +429,16 @@ class MemberService
     {
         $param = [
             'bizUserId' => $request->getBizUserId(),
-            'cardNo' => $request->getCardNo() ? app('allinpay')->RsaEncode($request->getCardNo()) : null,
+            'cardNo' => $request->getCardNo() ? $this->allinpay->RsaEncode($request->getCardNo()) : null,
             'phone' => $request->getPhone(),
             'name' => $request->getName(),
             'cardCheck' => $request->getCardCheck(), // 2-ITS 四要素+短信 6-通联通协议支付签约 7-收银宝快捷支付签约
             'identityType' => $request->getIdentityType(),
-            'identityNo' => $request->getIdentityNo() ? app('allinpay')->RsaEncode($request->getIdentityNo()) : null,
+            'identityNo' => $request->getIdentityNo() ? $this->allinpay->RsaEncode($request->getIdentityNo()) : null,
             'validate' => $request->getValidate(),
-            'cvv2' => $request->getCvv2() ? app('allinpay')->RsaEncode($request->getCvv2()) : null,
+            'cvv2' => $request->getCvv2() ? $this->allinpay->RsaEncode($request->getCvv2()) : null,
         ];
-        return app('allinpay')->AllinpayCurl('MemberService', 'bankCardChangeBindPhone', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'bankCardChangeBindPhone', $param);
     }
 
     /**
@@ -455,9 +456,9 @@ class MemberService
             'phone' => $request->getPhone(),
             'verificationCode' => $request->getVerificationCode(),
             'validate' => $request->getValidate(),
-            'cvv2' => $request->getCvv2() ? app('allinpay')->RsaEncode($request->getCvv2()) : null,
+            'cvv2' => $request->getCvv2() ? $this->allinpay->RsaEncode($request->getCvv2()) : null,
         ];
-        return app('allinpay')->AllinpayCurl('MemberService', 'verifyBankCardChangeBindPhone', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'verifyBankCardChangeBindPhone', $param);
     }
 
     /**
@@ -473,6 +474,7 @@ class MemberService
             'accountSetNo' => $request->getAccountSetNo(),
             'acctOrgType' => $request->getAcctOrgType(),
         ];
-        return app('allinpay')->AllinpayCurl('MemberService', 'createBankSubAcctNo', $param);
+        return $this->allinpay->AllinpayCurl('MemberService', 'createBankSubAcctNo', $param);
     }
+
 }

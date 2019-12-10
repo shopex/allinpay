@@ -7,10 +7,25 @@
 
 namespace Tonglian\Allinpay\Port;
 
+use Tonglian\Allinpay\Common\AllinpayClient;
 use Tonglian\Allinpay\Requests\OrderRequest;
 
 class OrderService
 {
+
+    private $allinpay;
+
+    public function __construct($config) {
+        $this->allinpay = new AllinpayClient($config);
+    }
+
+    /**
+     * 4.2.1 订单类接口调用说明
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+
     /**
      * 4.2.2 充值申请
      *
@@ -39,7 +54,7 @@ class OrderService
             'extendInfo' => $request->getExtendInfo(),
         ];
 
-        return app('allinpay')->AllinpayCurl('OrderService', 'depositApply', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'depositApply', $param);
     }
 
     /**
@@ -60,7 +75,7 @@ class OrderService
             'backUrl' => $request->getBackUrl(),
             'orderExpireDatetime' => $request->getOrderExpireDatetime(),
             'payMethod' => $request->getPayMethod(),
-            'bankCardNo' => $request->getBankCardNo() ? app('allinpay')->RsaEncode($request->getBankCardNo()) : null,
+            'bankCardNo' => $request->getBankCardNo() ? $this->allinpay->RsaEncode($request->getBankCardNo()) : null,
             'bankCardPro' => $request->getBankCardPro(),
             'withdrawType' => $request->getWithdrawType(),
             'industryCode' => $request->getIndustryCode(),
@@ -70,7 +85,7 @@ class OrderService
             'extendInfo' => $request->getExtendInfo(),
         ];
 
-        return app('allinpay')->AllinpayCurl('OrderService', 'withdrawApply', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'withdrawApply', $param);
     }
 
     /**
@@ -103,7 +118,7 @@ class OrderService
             'summary' => $request->getSummary(),
             'extendInfo' => $request->getExtendInfo(),
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'consumeApply', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'consumeApply', $param);
     }
 
     /**
@@ -137,7 +152,7 @@ class OrderService
             'extendInfo' => $request->getExtendInfo(),
         ];
 
-        return app('allinpay')->AllinpayCurl('OrderService', 'agentCollectApply', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'agentCollectApply', $param);
     }
 
     /**
@@ -163,7 +178,7 @@ class OrderService
             'summary' => $request->getSummary(),
             'extendInfo' => $request->getExtendInfo(),
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'signalAgentPay', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'signalAgentPay', $param);
     }
 
     /**
@@ -181,7 +196,7 @@ class OrderService
             'bizGoodsNo' => $request->getBizGoodsNo(),
             'tradeCode' => $request->gettradeCode(),
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'batchAgentPay', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'batchAgentPay', $param);
     }
 
     /**
@@ -196,10 +211,60 @@ class OrderService
             'bizUserId' => $request->getBizUserId(),
             'bizOrderNo' => $request->getBizOrderNo(),
             'tradeNo' => $request->getTradeNo(),
+            'jumpUrl' => $request->getJumpUrl(),
             'verificationCode' => $request->getVerificationCode(),
             'consumerIp' => $request->getConsumerIp(),
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'pay', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'pay', $param);
+    }
+
+    /**
+     * 4.2.9 确认支付(前台+短信验证码确认)[api pay]
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+
+    /**
+     * 4.2.10 确认支付(前台+密码验证版)[api pay]
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+
+    /**
+     * 4.2.11 商品录入
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+    public function entryGoods(OrderRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'goodsType' => $request->getGoodsType(),
+            'bizGoodsNo' => $request->getBizGoodsNo(),
+            'goodsName' => $request->getGoodsName(),
+            'goodsDetail' => $request->getGoodsDetail(),
+            'goodsParams' => $request->getGoodsParams(),
+            'showUrl' => $request->getShowUrl(),
+        ];
+        return $this->allinpay->AllinpayCurl('OrderService', 'entryGoods', $param);
+    }
+
+    /**
+     * 4.2.12 查询商品
+     *
+     * @param OrderRequest $request
+     * @return array|mixed
+     */
+    public function queryGoods(OrderRequest $request)
+    {
+        $param = [
+            'bizUserId' => $request->getBizUserId(),
+            'bizGoodsNo' => $request->getBizGoodsNo(),
+        ];
+        return $this->allinpay->AllinpayCurl('OrderService', 'queryGoods', $param);
     }
 
     /**
@@ -216,7 +281,7 @@ class OrderService
             'accountSetNo' => $request->getAccountSetNo(),
             'amount' => $request->getAmount(),
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'freezeMoney', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'freezeMoney', $param);
     }
 
     /**
@@ -233,7 +298,7 @@ class OrderService
             'accountSetNo' => $request->getAccountSetNo(),
             'amount' => $request->getAmount(),
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'unfreezeMoney', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'unfreezeMoney', $param);
     }
 
     /**
@@ -256,7 +321,7 @@ class OrderService
             'feeAmount' => $request->getFeeAmount(),
             'extendInfo' => $request->getExtendInfo(),
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'refund', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'refund', $param);
     }
 
     /**
@@ -275,7 +340,7 @@ class OrderService
             'amount' => $request->getAmount(),
             'extendInfo' => $request->getExtendInfo(),
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'applicationTransfer', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'applicationTransfer', $param);
     }
 
     /**
@@ -290,7 +355,7 @@ class OrderService
             'bizUserId' => $request->getBizUserId(),
             'accountSetNo' => $request->getAccountSetNo(),
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'queryBalance', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'queryBalance', $param);
     }
 
     /**
@@ -304,7 +369,7 @@ class OrderService
         $param = [
             'bizOrderNo' => $request->getBizOrderNo()
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'getOrderDetail', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'getOrderDetail', $param);
     }
 
     /**
@@ -323,7 +388,7 @@ class OrderService
             'startPosition' => $request->getStartPosition(),
             'queryNum' => $request->getQueryNum(),
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'queryInExpDetail', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'queryInExpDetail', $param);
     }
 
     /**
@@ -341,7 +406,7 @@ class OrderService
             'dateStart' => $request->getDateStart(),
             'dateEnd' => $request->getDateEnd(),
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'getPaymentInformationDetail', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'getPaymentInformationDetail', $param);
     }
 
     /**
@@ -359,7 +424,7 @@ class OrderService
             'dateStart' => $request->getDateStart(),
             'dateEnd' => $request->getDateEnd(),
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'getPayeeFundsInTransitDetail', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'getPayeeFundsInTransitDetail', $param);
     }
 
     /**
@@ -381,7 +446,7 @@ class OrderService
             'orderExpireDatetime' => $request->getOrderExpireDatetime(),
             'payMethod' => $request->getPayMethod(),
             'crossBorderbizUserId' => $request->getCrossBorderbizUserId(),
-            'bankCardNo' => $request->getBankCardNo() ? app('allinpay')->RsaEncode($request->getBankCardNo()) : null,
+            'bankCardNo' => $request->getBankCardNo() ? $this->allinpay->RsaEncode($request->getBankCardNo()) : null,
             'bankCardPro' => $request->getBankCardPro(),
             'withdrawType' => $request->getWithdrawType(),
             'industryCode' => $request->getIndustryCode(),
@@ -390,7 +455,7 @@ class OrderService
             'summary' => $request->getSummary(),
             'extendInfo' => $request->getExtendInfo(),
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'crossBorderWithdrawApply', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'crossBorderWithdrawApply', $param);
     }
 
     /**
@@ -404,7 +469,7 @@ class OrderService
         $param = [
             'bizOrderNo' => $request->getBizOrderNo(),
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'getOrderSplitRuleListDetail', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'getOrderSplitRuleListDetail', $param);
     }
 
     /**
@@ -418,7 +483,7 @@ class OrderService
         $param = [
             'bizOrderNo' => $request->getBizOrderNo(),
         ];
-        return app('allinpay')->AllinpayCurl('OrderService', 'resendPaySMS', $param);
+        return $this->allinpay->AllinpayCurl('OrderService', 'resendPaySMS', $param);
     }
 
 }

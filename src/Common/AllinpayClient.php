@@ -8,33 +8,44 @@
 
 namespace Tonglian\Allinpay\Common;
 
-use App\Helpers\Tools;
+use Tonglian\Allinpay\Helper\Tools;
 use Tonglian\Allinpay\SDK\Crypt\Crypt_RSA;
 use Tonglian\Allinpay\SDK\File\File_X509;
 
 class AllinpayClient
 {
+    const VERSION = '2.1.2';
+
     public $serverUrl;
     public $path;
     public $pwd;
-    public $alias;
     public $version;
     public $tlCertPath;
     public $sysid;
+    public $logPath;
 
-    public function __construct()
+    public function __construct($config)
     {
-        $this->serverUrl = config('allinpay.server_url');
-        $this->path = config('allinpay.private_key_path');
-        $this->pwd = config('allinpay.private_password');
-        $this->alias = config('allinpay.alias');
-        $this->version = config('allinpay.version');
-        $this->tlCertPath = config('allinpay.tl_cert_path');
-        $this->sysid = config('allinpay.sysid');
+        if (!isset($config['sysid']) && !$config['sysid']) throw new \Exception('sysid must not be null');
+        if (!isset($config['server_url']) && !$config['server_url']) throw new \Exception('server_url must not be null');
+        if (!isset($config['private_key_path']) && !$config['private_key_path']) throw new \Exception('private_key_path must not be null');
+        if (!isset($config['tl_cert_path']) && !$config['tl_cert_path']) throw new \Exception('tl_cert_path must not be null');
+        if (!isset($config['private_password']) && !$config['private_password']) throw new \Exception('private_password must not be null');
+        if (!isset($config['version']) && !$config['version']) throw new \Exception('version must not be null');
+        if (version_compare(self::VERSION, '2.1.2', '<')) throw new \Exception('version are too old');
+        if (!isset($config['log_path']) && !$config['log_path']) throw new \Exception('log_path must not be null');
+
+        $this->serverUrl = $config['server_url'];
+        $this->path = $config['private_key_path'];
+        $this->pwd = $config['private_password'];
+        $this->version = $config['version'];
+        $this->tlCertPath = $config['tl_cert_path'];
+        $this->sysid = $config['sysid'];
+        $this->logPath = $config['log_path'];
     }
 
     /**
-     *请求封装
+     * 请求封装
      *
      * @param string $service 服务名称
      * @param string $method 方法名称
@@ -59,11 +70,12 @@ class AllinpayClient
         $req['v'] = $this->version;
         $serverAddress = $this->serverUrl;
 
-        Tools::logInfo($req, '通联请求参数', 'tonglian');
+        Tools::logInfo($this->logPath, $req, '通联请求参数', 'tonglian');
 
         $result = $this->requestYSTAPI($serverAddress, $req);
         $response = json_decode($result, true);
         if (!$this->checkResult($result)) {
+            Tools::logInfo($this->logPath, $response, '通联返回参数', 'tonglian');
             return Tools::setData($response);
         }
 
@@ -73,6 +85,8 @@ class AllinpayClient
                 $response['signedValue'] = $decodeSignedValue;
             }
         }
+
+        Tools::logInfo($this->logPath, $response, '通联返回参数', 'tonglian');
         return Tools::setData($response);
     }
 
@@ -152,17 +166,13 @@ class AllinpayClient
         $houzuiName = $str[count($str) - 1];
         if ($houzuiName == "pfx") {
             return $this->loadPrivateKeyByPfx($path, $pwd);
-            //$priKey = file_get_contents($path);
-            //$res = openssl_get_privatekey($priKey, $pwd);
-            //return $res;
         }
 
         if ($houzuiName == "pem") {
             $priKey = file_get_contents($path);
             $res = openssl_get_privatekey($priKey, $pwd);
-            //echo "<br/>pem===".$res. "<br/>";
             if (!$res) {
-                exit('您使用的私钥格式错误，请检查私钥配置');
+                throw new \Exception('您使用的私钥格式错误，请检查私钥配置');
             }
             return $res;
         }
@@ -184,10 +194,9 @@ class AllinpayClient
                 $privateKey = $certs['pkey'];
                 return $privateKey;
             }
-            die("私钥文件格式错误");
-
+            throw new \Exception('私钥文件格式错误');
         }
-        die('私钥文件不存在');
+        throw new \Exception('私钥文件不存在');
     }
 
     /**
@@ -221,10 +230,11 @@ class AllinpayClient
         curl_getinfo($ch);
         curl_close($ch);
         return $result;
+        var_dump($result);die();
     }
 
     /**
-     *检查返回的结果是否合法;
+     * 检查返回的结果是否合法;
      *
      * @param $result 需要检测的返回结果
      * @return bool
@@ -244,7 +254,7 @@ class AllinpayClient
     }
 
     /**
-     *验证的返回结果的合法性 2.0版本
+     * 验证的返回结果的合法性 2.0版本
      *
      * @param $publicKeyPath 公匙所在绝对路径
      * @param $signedValue   返回的数据
@@ -275,7 +285,7 @@ class AllinpayClient
 
 
     /**
-     *验证返回的数据的合法性
+     * 验证返回的数据的合法性
      *
      * @param $publicKeyPath 公匙整数所在的绝对路径
      * @param $text
@@ -335,92 +345,9 @@ class AllinpayClient
         }
         return $string;
     }
-    /*
-    public function decrypt($data, $code = 'base64', $padding = OPENSSL_PKCS1_PADDING, $rev = false)
-    {
-        $ret = false;
-        $data = $this->_decode($data, $code);
-        $path = $this->config->getConf('path');
-        $pwd = $this->config->getConf('pwd');
-        $this->_getPrivateKey($path,$pwd);
-        if (!$this->_checkPadding($padding, 'de')) $this->_error('padding error');
-        if ($data !== false)
-        {
-            if (openssl_private_decrypt($data, $result, $this->priKey, $padding))
-            {
-                $ret = $rev ? rtrim(strrev($result), "\0") : ''.$result;
-            }
-        }
-        return $ret;
-    }
 
-    private function _getPrivateKey($path,$pwd)
-    {
-        $key_content = $this->_readFile($path);
-        if ($key_content)
-        {
-            $this->priKey = openssl_get_privatekey($path,$pwd);
-            var_dump($this->priKey);
-        }
-    }
-
-    private function _readFile($file){
-        $ret = false;
-        if (!file_exists($file))
-        {
-            $this->_error("The file {$file} is not exists");
-        }else
-        {
-            $ret = file_get_contents($file);
-        }
-        return $ret;
-    }
-
-    private function _checkPadding($padding, $type){
-        if ($type == 'en')
-        {
-            switch ($padding){
-                case OPENSSL_PKCS1_PADDING:
-                    $ret = true;
-                    break;
-                default:
-                    $ret = false;
-            }
-        }else
-        {
-            switch ($padding){
-            case OPENSSL_PKCS1_PADDING:
-            case OPENSSL_NO_PADDING:
-                $ret = true;
-                break;
-            default:
-                $ret = false;
-            }
-        }
-        //var_dump($ret);
-        return $ret;
-    }
-    private function _decode($data, $code){
-        switch (strtolower($code)){
-        case 'base64':
-            $data = base64_decode($data);
-            break;
-        case 'hex':
-            $data = $this->_hex2bin($data);
-        break;
-            case 'bin':
-        default:
-        }
-        return $data;
-    }
-
-    private function _hex2bin($hex = false){
-        $ret = $hex !== false && preg_match('/^[0-9a-fA-F]+$/i', $hex) ? pack("H*", $hex) : false;
-        return $ret;
-    }
-    */
     /**
-     *获取公匙的绝对路径
+     * 获取公匙的绝对路径
      *
      * @param 参数1
      * @param 参数2
@@ -430,28 +357,6 @@ class AllinpayClient
     public function getPublicKeyPath()
     {
         return $this->tlCertPath;
-    }
-
-    /**
-     * [curPageURL 获取当前URL]
-     *
-     * @return [type] [description]
-     */
-    public function curPageURL()
-    {
-        $pageURL = 'http';
-
-        if ($_SERVER["HTTPS"] == "on") {
-            $pageURL .= "s";
-        }
-        $pageURL .= "://";
-
-        if ($_SERVER["SERVER_PORT"] != "80") {
-            $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
-        } else {
-            $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
-        }
-        return $pageURL;
     }
 
     /**

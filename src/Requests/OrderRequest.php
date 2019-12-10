@@ -55,6 +55,10 @@ class OrderRequest
     private $dateEnd;
     private $startPosition;
     private $queryNum;
+    private $goodsDetail;
+    private $goodsParams;
+    private $showUrl;
+    private $jumpUrl;
 
     /**
      * @return mixed
@@ -854,5 +858,69 @@ class OrderRequest
     public function setQueryNum($queryNum): void
     {
         $this->queryNum = $queryNum;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGoodsDetail()
+    {
+        return $this->goodsDetail;
+    }
+
+    /**
+     * @param mixed $goodsDetail
+     */
+    public function setGoodsDetail($goodsDetail): void
+    {
+        $this->goodsDetail = $goodsDetail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGoodsParams()
+    {
+        return $this->goodsParams;
+    }
+
+    /**
+     * @param mixed $goodsParams
+     */
+    public function setGoodsParams($goodsParams): void
+    {
+        $this->goodsParams = $goodsParams;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShowUrl()
+    {
+        return $this->showUrl;
+    }
+
+    /**
+     * @param mixed $showUrl
+     */
+    public function setShowUrl($showUrl): void
+    {
+        $this->showUrl = $showUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJumpUrl()
+    {
+        return $this->jumpUrl;
+    }
+
+    /**
+     * @param mixed $jumpUrl
+     */
+    public function setJumpUrl($jumpUrl): void
+    {
+        $this->jumpUrl = $jumpUrl;
     }
 }
