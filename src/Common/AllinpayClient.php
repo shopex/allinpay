@@ -6,11 +6,11 @@
  * Time: 上午9:21
  */
 
-namespace Tonglian\Allinpay\Common;
+namespace Onex\Allinpay\Common;
 
-use Tonglian\Allinpay\Helper\Tools;
-use Tonglian\Allinpay\SDK\Crypt\Crypt_RSA;
-use Tonglian\Allinpay\SDK\File\File_X509;
+use Onex\Allinpay\Helper\Tools;
+use Onex\Allinpay\SDK\Crypt\Crypt_RSA;
+use Onex\Allinpay\SDK\File\File_X509;
 
 class AllinpayClient
 {

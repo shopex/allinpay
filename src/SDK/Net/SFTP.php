@@ -1,5 +1,5 @@
 <?php
-namespace Tonglian\Allinpay\SDK\Net;
+namespace Onex\Allinpay\SDK\Net;
 /**
  * Pure-PHP implementation of SFTP.
  *

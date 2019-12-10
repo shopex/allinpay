@@ -1,15 +1,15 @@
 <?php
 
-namespace Tonglian\Allinpay\Providers;
+namespace Onex\Allinpay\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Tonglian\Allinpay\Allinpay;
-use Tonglian\Allinpay\Port\MemberService;
-use Tonglian\Allinpay\Port\MerchantService;
-use Tonglian\Allinpay\Port\OrderService;
-use Tonglian\Allinpay\Requests\MemberRequest;
-use Tonglian\Allinpay\Requests\MerchantRequest;
-use Tonglian\Allinpay\Requests\OrderRequest;
+use Onex\Allinpay\Allinpay;
+use Onex\Allinpay\Port\MemberService;
+use Onex\Allinpay\Port\MerchantService;
+use Onex\Allinpay\Port\OrderService;
+use Onex\Allinpay\Requests\MemberRequest;
+use Onex\Allinpay\Requests\MerchantRequest;
+use Onex\Allinpay\Requests\OrderRequest;
 
 class AllinpayApiProvider extends ServiceProvider
 {

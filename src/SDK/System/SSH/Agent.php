@@ -1,5 +1,5 @@
 <?php
-namespace Tonglian\Allinpay\SDK\System\SSH;
+namespace Onex\Allinpay\SDK\System\SSH;
 /**
  * Pure-PHP ssh-agent client.
  *

@@ -1,5 +1,5 @@
 <?php
-namespace Tonglian\Allinpay\SDK\Crypt;
+namespace Onex\Allinpay\SDK\Crypt;
 /**
  * Pure-PHP implementation of Blowfish.
  *

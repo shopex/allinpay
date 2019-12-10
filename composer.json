@@ -15,13 +15,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Tonglian\\Allinpay\\": "src/"
+            "Onex\\Allinpay\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Tonglian\\Allinpay\\Providers\\AllinpayApiProvider"
+                "Onex\\Allinpay\\Providers\\AllinpayApiProvider"
             ]
         }
     }

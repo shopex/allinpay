@@ -1,6 +1,6 @@
 <?php
 
-namespace Tonglian\Allinpay\Requests;
+namespace Onex\Allinpay\Requests;
 
 
 class OrderRequest

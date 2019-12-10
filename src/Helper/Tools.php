@@ -1,6 +1,6 @@
 <?php
 
-namespace Tonglian\Allinpay\Helper;
+namespace Onex\Allinpay\Helper;
 
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;

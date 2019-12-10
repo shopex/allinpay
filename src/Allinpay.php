@@ -1,7 +1,7 @@
 <?php
-namespace Tonglian\Allinpay;
+namespace Onex\Allinpay;
 
-use Tonglian\Allinpay\Port\MerchantService;
+use Onex\Allinpay\Port\MerchantService;
 
 class Allinpay
 {

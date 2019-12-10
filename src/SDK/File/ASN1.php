@@ -1,6 +1,6 @@
 <?php
-namespace Tonglian\Allinpay\SDK\File;
-use Tonglian\Allinpay\SDK\Math\Math_BigInteger;
+namespace Onex\Allinpay\SDK\File;
+use Onex\Allinpay\SDK\Math\Math_BigInteger;
 /**
  * Pure-PHP ASN.1 Parser
  *

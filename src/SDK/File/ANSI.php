@@ -1,5 +1,5 @@
 <?php
-namespace Tonglian\Allinpay\SDK\File;
+namespace Onex\Allinpay\SDK\File;
 
 /**
  * Pure-PHP ANSI Decoder

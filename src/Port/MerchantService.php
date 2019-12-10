@@ -5,10 +5,10 @@
  * @date 2019/9/5 15:34
  */
 
-namespace Tonglian\Allinpay\Port;
+namespace Onex\Allinpay\Port;
 
-use Tonglian\Allinpay\Common\AllinpayClient;
-use Tonglian\Allinpay\Requests\MerchantRequest;
+use Onex\Allinpay\Common\AllinpayClient;
+use Onex\Allinpay\Requests\MerchantRequest;
 
 class MerchantService
 {

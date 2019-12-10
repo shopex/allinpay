@@ -1,6 +1,6 @@
 <?php
-namespace Tonglian\Allinpay\SDK\Crypt;
-use Tonglian\Allinpay\SDK\Math\Math_BigInteger;
+namespace Onex\Allinpay\SDK\Crypt;
+use Onex\Allinpay\SDK\Math\Math_BigInteger;
 
 /**
  * Pure-PHP PKCS#1 (v2.1) compliant implementation of RSA.
