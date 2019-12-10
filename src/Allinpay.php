@@ -1,8 +1,6 @@
 <?php
 namespace Onex\Allinpay;
 
-use Onex\Allinpay\Port\MerchantService;
-
 class Allinpay
 {
 
@@ -15,6 +13,6 @@ class Allinpay
      */
     public function __call($method, $parameters)
     {
-        return new MerchantService(config('allinpay'));
+        return app('allinpay.' . $method);
     }
 }

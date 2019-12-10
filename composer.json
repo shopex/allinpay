@@ -1,11 +1,16 @@
 {
     "name": "onex/allinpay",
-    "description": "how to develop a laravel package",
+    "description": "allinpay package",
+    "keywords": ["allinpay", "通联", "通联支付", "通联云"],
     "license": "MIT",
     "authors": [
         {
             "name": "huangjinbing",
             "email": "373768442@qq.com"
+        },
+        {
+            "name": "shixuefeng",
+            "email": "sxffind@126.com"
         }
     ],
     "minimum-stability": "dev",
