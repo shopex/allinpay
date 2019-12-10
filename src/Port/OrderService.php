@@ -15,43 +15,46 @@ class OrderService
 
     private $allinpay;
 
-    public function __construct($config) {
+    private $request;
+
+    public function __construct($config, OrderRequest $request) {
         $this->allinpay = new AllinpayClient($config);
+        $this->request = $request;
     }
 
     /**
      * 4.2.1 订单类接口调用说明
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
 
     /**
      * 4.2.2 充值申请
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function depositApply(OrderRequest $request)
+    public function depositApply()
     {
         $param = [
-            'bizOrderNo' => $request->getBizOrderNo(),
-            'bizUserId' => $request->getBizUserId(),
-            'accountSetNo' => $request->getAccountSetNo(),
-            'amount' => $request->getAmount(),
-            'fee' => $request->getFee(),
-            'validateType' => $request->getValidateType(),
-            'frontUrl' => $request->getFrontUrl(),
-            'backUrl' => $request->getBackUrl(),
-            'orderExpireDatetime' => $request->getOrderExpireDatetime(),
-            'payMethod' => $request->getPayMethod(),
-            'goodsName' => $request->getGoodsName(),
-            'goodsDesc' => $request->getGoodsDesc(),
-            'industryCode' => $request->getIndustryCode(),
-            'industryName' => $request->getIndustryName(),
-            'source' => $request->getSource(),
-            'summary' => $request->getSummary(),
-            'extendInfo' => $request->getExtendInfo(),
+            'bizOrderNo' => $this->request->getBizOrderNo(),
+            'bizUserId' => $this->request->getBizUserId(),
+            'accountSetNo' => $this->request->getAccountSetNo(),
+            'amount' => $this->request->getAmount(),
+            'fee' => $this->request->getFee(),
+            'validateType' => $this->request->getValidateType(),
+            'frontUrl' => $this->request->getFrontUrl(),
+            'backUrl' => $this->request->getBackUrl(),
+            'orderExpireDatetime' => $this->request->getOrderExpireDatetime(),
+            'payMethod' => $this->request->getPayMethod(),
+            'goodsName' => $this->request->getGoodsName(),
+            'goodsDesc' => $this->request->getGoodsDesc(),
+            'industryCode' => $this->request->getIndustryCode(),
+            'industryName' => $this->request->getIndustryName(),
+            'source' => $this->request->getSource(),
+            'summary' => $this->request->getSummary(),
+            'extendInfo' => $this->request->getExtendInfo(),
         ];
 
         return $this->allinpay->AllinpayCurl('OrderService', 'depositApply', $param);
@@ -60,29 +63,29 @@ class OrderService
     /**
      * 4.2.3 提现申请
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function withdrawApply(OrderRequest $request)
+    public function withdrawApply()
     {
         $param = [
-            'bizOrderNo' => $request->getBizOrderNo(),
-            'bizUserId' => $request->getBizUserId(),
-            'accountSetNo' => $request->getAccountSetNo(),
-            'amount' => $request->getAmount(),
-            'fee' => $request->getFee(),
-            'validateType' => $request->getValidateType(),
-            'backUrl' => $request->getBackUrl(),
-            'orderExpireDatetime' => $request->getOrderExpireDatetime(),
-            'payMethod' => $request->getPayMethod(),
-            'bankCardNo' => $request->getBankCardNo() ? $this->allinpay->RsaEncode($request->getBankCardNo()) : null,
-            'bankCardPro' => $request->getBankCardPro(),
-            'withdrawType' => $request->getWithdrawType(),
-            'industryCode' => $request->getIndustryCode(),
-            'industryName' => $request->getIndustryName(),
-            'source' => $request->getSource(),
-            'summary' => $request->getSummary(),
-            'extendInfo' => $request->getExtendInfo(),
+            'bizOrderNo' => $this->request->getBizOrderNo(),
+            'bizUserId' => $this->request->getBizUserId(),
+            'accountSetNo' => $this->request->getAccountSetNo(),
+            'amount' => $this->request->getAmount(),
+            'fee' => $this->request->getFee(),
+            'validateType' => $this->request->getValidateType(),
+            'backUrl' => $this->request->getBackUrl(),
+            'orderExpireDatetime' => $this->request->getOrderExpireDatetime(),
+            'payMethod' => $this->request->getPayMethod(),
+            'bankCardNo' => $this->request->getBankCardNo() ? $this->allinpay->RsaEncode($this->request->getBankCardNo()) : null,
+            'bankCardPro' => $this->request->getBankCardPro(),
+            'withdrawType' => $this->request->getWithdrawType(),
+            'industryCode' => $this->request->getIndustryCode(),
+            'industryName' => $this->request->getIndustryName(),
+            'source' => $this->request->getSource(),
+            'summary' => $this->request->getSummary(),
+            'extendInfo' => $this->request->getExtendInfo(),
         ];
 
         return $this->allinpay->AllinpayCurl('OrderService', 'withdrawApply', $param);
@@ -91,32 +94,32 @@ class OrderService
     /**
      * 4.2.4 消费申请
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function consumeApply(OrderRequest $request)
+    public function consumeApply()
     {
         $param = [
-            'payerId' => $request->getPayerId(),
-            'recieverId' => $request->getRecieverId(),
-            'bizOrderNo' => $request->getBizOrderNo(),
-            'amount' => $request->getAmount(),
-            'fee' => $request->getFee(),
-            'validateType' => $request->getValidateType(),
-            'splitRule' => $request->getSplitRule(),
-            'frontUrl' => $request->getFrontUrl(),
-            'backUrl' => $request->getBackUrl(),
-            'orderExpireDatetime' => $request->getOrderExpireDatetime(),
-            'payMethod' => $request->getPayMethod(),
-            'goodsType' => $request->getGoodsType(),
-            'bizGoodsNo' => $request->getBizGoodsNo(),
-            'goodsName' => $request->getGoodsName(),
-            'goodsDesc' => $request->getGoodsDesc(),
-            'industryCode' => $request->getIndustryCode(),
-            'industryName' => $request->getIndustryName(),
-            'source' => $request->getSource(),
-            'summary' => $request->getSummary(),
-            'extendInfo' => $request->getExtendInfo(),
+            'payerId' => $this->request->getPayerId(),
+            'recieverId' => $this->request->getRecieverId(),
+            'bizOrderNo' => $this->request->getBizOrderNo(),
+            'amount' => $this->request->getAmount(),
+            'fee' => $this->request->getFee(),
+            'validateType' => $this->request->getValidateType(),
+            'splitRule' => $this->request->getSplitRule(),
+            'frontUrl' => $this->request->getFrontUrl(),
+            'backUrl' => $this->request->getBackUrl(),
+            'orderExpireDatetime' => $this->request->getOrderExpireDatetime(),
+            'payMethod' => $this->request->getPayMethod(),
+            'goodsType' => $this->request->getGoodsType(),
+            'bizGoodsNo' => $this->request->getBizGoodsNo(),
+            'goodsName' => $this->request->getGoodsName(),
+            'goodsDesc' => $this->request->getGoodsDesc(),
+            'industryCode' => $this->request->getIndustryCode(),
+            'industryName' => $this->request->getIndustryName(),
+            'source' => $this->request->getSource(),
+            'summary' => $this->request->getSummary(),
+            'extendInfo' => $this->request->getExtendInfo(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'consumeApply', $param);
     }
@@ -124,32 +127,32 @@ class OrderService
     /**
      * 4.2.5 托管代收申请(标准版)
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array
      */
-    public function agentCollectApply(OrderRequest $request)
+    public function agentCollectApply()
     {
         $param = [
-            'bizOrderNo' => $request->getBizOrderNo(),
-            'payerId' => $request->getPayerId(),
-            'recieverList' => $request->getRecieverList(),
-            'goodsType' => $request->getGoodsType(),
-            'bizGoodsNo' => $request->getBizGoodsNo(),
-            'tradeCode' => $request->getTradeCode(),
-            'amount' => $request->getAmount(),
-            'fee' => $request->getFee(),
-            'validateType' => $request->getValidateType(),
-            'frontUrl' => $request->getFrontUrl(),
-            'backUrl' => $request->getBackUrl(),
-            'orderExpireDatetime' => $request->getOrderExpireDatetime(),
-            'payMethod' => $request->getPayMethod(),
-            'goodsName' => $request->getGoodsName(),
-            'goodsDesc' => $request->getGoodsDesc(),
-            'industryCode' => $request->getIndustryCode(),
-            'industryName' => $request->getIndustryName(),
-            'source' => $request->getSource(),
-            'summary' => $request->getSummary(),
-            'extendInfo' => $request->getExtendInfo(),
+            'bizOrderNo' => $this->request->getBizOrderNo(),
+            'payerId' => $this->request->getPayerId(),
+            'recieverList' => $this->request->getRecieverList(),
+            'goodsType' => $this->request->getGoodsType(),
+            'bizGoodsNo' => $this->request->getBizGoodsNo(),
+            'tradeCode' => $this->request->getTradeCode(),
+            'amount' => $this->request->getAmount(),
+            'fee' => $this->request->getFee(),
+            'validateType' => $this->request->getValidateType(),
+            'frontUrl' => $this->request->getFrontUrl(),
+            'backUrl' => $this->request->getBackUrl(),
+            'orderExpireDatetime' => $this->request->getOrderExpireDatetime(),
+            'payMethod' => $this->request->getPayMethod(),
+            'goodsName' => $this->request->getGoodsName(),
+            'goodsDesc' => $this->request->getGoodsDesc(),
+            'industryCode' => $this->request->getIndustryCode(),
+            'industryName' => $this->request->getIndustryName(),
+            'source' => $this->request->getSource(),
+            'summary' => $this->request->getSummary(),
+            'extendInfo' => $this->request->getExtendInfo(),
         ];
 
         return $this->allinpay->AllinpayCurl('OrderService', 'agentCollectApply', $param);
@@ -158,25 +161,25 @@ class OrderService
     /**
      * 4.2.6 单笔托管代付(标准版)
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array
      */
-    public function signalAgentPay(OrderRequest $request)
+    public function signalAgentPay()
     {
         $param = [
-            'bizOrderNo' => $request->getBizOrderNo(),
-            'collectPayList' => $request->getCollectPayList(),
-            'bizUserId' => $request->getBizUserId(),
-            'accountSetNo' => $request->getAccountSetNo(),
-            'backUrl' => $request->getBackUrl(),
-            'amount' => $request->getAmount(),
-            'fee' => $request->getFee(),
-            'splitRuleList' => $request->getSplitRuleList(),
-            'goodsType' => $request->getGoodsType(),
-            'bizGoodsNo' => $request->getBizGoodsNo(),
-            'tradeCode' => $request->getTradeCode(),
-            'summary' => $request->getSummary(),
-            'extendInfo' => $request->getExtendInfo(),
+            'bizOrderNo' => $this->request->getBizOrderNo(),
+            'collectPayList' => $this->request->getCollectPayList(),
+            'bizUserId' => $this->request->getBizUserId(),
+            'accountSetNo' => $this->request->getAccountSetNo(),
+            'backUrl' => $this->request->getBackUrl(),
+            'amount' => $this->request->getAmount(),
+            'fee' => $this->request->getFee(),
+            'splitRuleList' => $this->request->getSplitRuleList(),
+            'goodsType' => $this->request->getGoodsType(),
+            'bizGoodsNo' => $this->request->getBizGoodsNo(),
+            'tradeCode' => $this->request->getTradeCode(),
+            'summary' => $this->request->getSummary(),
+            'extendInfo' => $this->request->getExtendInfo(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'signalAgentPay', $param);
     }
@@ -184,17 +187,17 @@ class OrderService
     /**
      * 4.2.7 批量托管代付（标准版）
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function batchAgentPay(OrderRequest $request)
+    public function batchAgentPay()
     {
         $param = [
-            'bizBatchNo' => $request->getBizBatchNo(),
-            'batchPayList' => $request->getBatchPayList(),
-            'goodsType' => $request->getgoodsType(),
-            'bizGoodsNo' => $request->getBizGoodsNo(),
-            'tradeCode' => $request->gettradeCode(),
+            'bizBatchNo' => $this->request->getBizBatchNo(),
+            'batchPayList' => $this->request->getBatchPayList(),
+            'goodsType' => $this->request->getgoodsType(),
+            'bizGoodsNo' => $this->request->getBizGoodsNo(),
+            'tradeCode' => $this->request->gettradeCode(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'batchAgentPay', $param);
     }
@@ -202,18 +205,18 @@ class OrderService
     /**
      * 4.2.8 确认支付(后台+短信验证码确认)
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function pay(OrderRequest $request)
+    public function pay()
     {
         $param = [
-            'bizUserId' => $request->getBizUserId(),
-            'bizOrderNo' => $request->getBizOrderNo(),
-            'tradeNo' => $request->getTradeNo(),
-            'jumpUrl' => $request->getJumpUrl(),
-            'verificationCode' => $request->getVerificationCode(),
-            'consumerIp' => $request->getConsumerIp(),
+            'bizUserId' => $this->request->getBizUserId(),
+            'bizOrderNo' => $this->request->getBizOrderNo(),
+            'tradeNo' => $this->request->getTradeNo(),
+            'jumpUrl' => $this->request->getJumpUrl(),
+            'verificationCode' => $this->request->getVerificationCode(),
+            'consumerIp' => $this->request->getConsumerIp(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'pay', $param);
     }
@@ -221,33 +224,33 @@ class OrderService
     /**
      * 4.2.9 确认支付(前台+短信验证码确认)[api pay]
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
 
     /**
      * 4.2.10 确认支付(前台+密码验证版)[api pay]
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
 
     /**
      * 4.2.11 商品录入
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function entryGoods(OrderRequest $request)
+    public function entryGoods()
     {
         $param = [
-            'bizUserId' => $request->getBizUserId(),
-            'goodsType' => $request->getGoodsType(),
-            'bizGoodsNo' => $request->getBizGoodsNo(),
-            'goodsName' => $request->getGoodsName(),
-            'goodsDetail' => $request->getGoodsDetail(),
-            'goodsParams' => $request->getGoodsParams(),
-            'showUrl' => $request->getShowUrl(),
+            'bizUserId' => $this->request->getBizUserId(),
+            'goodsType' => $this->request->getGoodsType(),
+            'bizGoodsNo' => $this->request->getBizGoodsNo(),
+            'goodsName' => $this->request->getGoodsName(),
+            'goodsDetail' => $this->request->getGoodsDetail(),
+            'goodsParams' => $this->request->getGoodsParams(),
+            'showUrl' => $this->request->getShowUrl(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'entryGoods', $param);
     }
@@ -255,14 +258,14 @@ class OrderService
     /**
      * 4.2.12 查询商品
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function queryGoods(OrderRequest $request)
+    public function queryGoods()
     {
         $param = [
-            'bizUserId' => $request->getBizUserId(),
-            'bizGoodsNo' => $request->getBizGoodsNo(),
+            'bizUserId' => $this->request->getBizUserId(),
+            'bizGoodsNo' => $this->request->getBizGoodsNo(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'queryGoods', $param);
     }
@@ -270,16 +273,16 @@ class OrderService
     /**
      * 4.2.13 冻结金额
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function freezeMoney(OrderRequest $request)
+    public function freezeMoney()
     {
         $param = [
-            'bizUserId' => $request->getBizUserId(),
-            'bizFreezenNo' => $request->getBizFreezenNo(),
-            'accountSetNo' => $request->getAccountSetNo(),
-            'amount' => $request->getAmount(),
+            'bizUserId' => $this->request->getBizUserId(),
+            'bizFreezenNo' => $this->request->getBizFreezenNo(),
+            'accountSetNo' => $this->request->getAccountSetNo(),
+            'amount' => $this->request->getAmount(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'freezeMoney', $param);
     }
@@ -287,16 +290,16 @@ class OrderService
     /**
      * 4.2.14 解冻金额
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function unfreezeMoney(OrderRequest $request)
+    public function unfreezeMoney()
     {
         $param = [
-            'bizUserId' => $request->getBizUserId(),
-            'bizFreezenNo' => $request->getBizFreezenNo(),
-            'accountSetNo' => $request->getAccountSetNo(),
-            'amount' => $request->getAmount(),
+            'bizUserId' => $this->request->getBizUserId(),
+            'bizFreezenNo' => $this->request->getBizFreezenNo(),
+            'accountSetNo' => $this->request->getAccountSetNo(),
+            'amount' => $this->request->getAmount(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'unfreezeMoney', $param);
     }
@@ -304,22 +307,22 @@ class OrderService
     /**
      * 4.2.16 退款申请
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function refund(OrderRequest $request)
+    public function refund()
     {
         $param = [
-            'bizOrderNo' => $request->getBizOrderNo(),
-            'oriBizOrderNo' => $request->getOriBizOrderNo(),
-            'bizUserId' => $request->getBizUserId(),
-            'refundType' => $request->getRefundType(),
-            'refundList' => $request->getRefundList(),
-            'backUrl' => $request->getBackUrl(),
-            'amount' => $request->getAmount(),
-            'couponAmount' => $request->getCouponAmount(),
-            'feeAmount' => $request->getFeeAmount(),
-            'extendInfo' => $request->getExtendInfo(),
+            'bizOrderNo' => $this->request->getBizOrderNo(),
+            'oriBizOrderNo' => $this->request->getOriBizOrderNo(),
+            'bizUserId' => $this->request->getBizUserId(),
+            'refundType' => $this->request->getRefundType(),
+            'refundList' => $this->request->getRefundList(),
+            'backUrl' => $this->request->getBackUrl(),
+            'amount' => $this->request->getAmount(),
+            'couponAmount' => $this->request->getCouponAmount(),
+            'feeAmount' => $this->request->getFeeAmount(),
+            'extendInfo' => $this->request->getExtendInfo(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'refund', $param);
     }
@@ -327,18 +330,18 @@ class OrderService
     /**
      * 4.2.17 平台转账
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function applicationTransfer(OrderRequest $request)
+    public function applicationTransfer()
     {
         $param = [
-            'bizTransferNo' => $request->getBizTransferNo(),
-            'sourceAccountSetNo' => $request->getSourceAccountSetNo(),
-            'targetBizUserId' => $request->getTargetBizUserId(),
-            'targetAccountSetNo' => $request->getTargetAccountSetNo(),
-            'amount' => $request->getAmount(),
-            'extendInfo' => $request->getExtendInfo(),
+            'bizTransferNo' => $this->request->getBizTransferNo(),
+            'sourceAccountSetNo' => $this->request->getSourceAccountSetNo(),
+            'targetBizUserId' => $this->request->getTargetBizUserId(),
+            'targetAccountSetNo' => $this->request->getTargetAccountSetNo(),
+            'amount' => $this->request->getAmount(),
+            'extendInfo' => $this->request->getExtendInfo(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'applicationTransfer', $param);
     }
@@ -346,14 +349,14 @@ class OrderService
     /**
      * 4.2.18 查询余额
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function queryBalance(OrderRequest $request)
+    public function queryBalance()
     {
         $param = [
-            'bizUserId' => $request->getBizUserId(),
-            'accountSetNo' => $request->getAccountSetNo(),
+            'bizUserId' => $this->request->getBizUserId(),
+            'accountSetNo' => $this->request->getAccountSetNo(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'queryBalance', $param);
     }
@@ -361,13 +364,13 @@ class OrderService
     /**
      * 4.2.19 查询订单状态
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function getOrderDetail(OrderRequest $request)
+    public function getOrderDetail()
     {
         $param = [
-            'bizOrderNo' => $request->getBizOrderNo()
+            'bizOrderNo' => $this->request->getBizOrderNo()
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'getOrderDetail', $param);
     }
@@ -375,18 +378,18 @@ class OrderService
     /**
      * 4.2.20 查询账户收支明细
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function queryInExpDetail(OrderRequest $request)
+    public function queryInExpDetail()
     {
         $param = [
-            'bizUserId' => $request->getBizUserId(),
-            'accountSetNo' => $request->getAccountSetNo(),
-            'dateStart' => $request->getDateStart(),
-            'dateEnd' => $request->getDateEnd(),
-            'startPosition' => $request->getStartPosition(),
-            'queryNum' => $request->getQueryNum(),
+            'bizUserId' => $this->request->getBizUserId(),
+            'accountSetNo' => $this->request->getAccountSetNo(),
+            'dateStart' => $this->request->getDateStart(),
+            'dateEnd' => $this->request->getDateEnd(),
+            'startPosition' => $this->request->getStartPosition(),
+            'queryNum' => $this->request->getQueryNum(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'queryInExpDetail', $param);
     }
@@ -394,17 +397,17 @@ class OrderService
     /**
      * 4.2.21 付款方资金代付明细查询
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function getPaymentInformationDetail(OrderRequest $request)
+    public function getPaymentInformationDetail()
     {
         $param = [
-            'bizOrderNo' => $request->getBizOrderNo(),
-            'bizUserId' => $request->getBizUserId(),
-            'accountSetNo' => $request->getAccountSetNo(),
-            'dateStart' => $request->getDateStart(),
-            'dateEnd' => $request->getDateEnd(),
+            'bizOrderNo' => $this->request->getBizOrderNo(),
+            'bizUserId' => $this->request->getBizUserId(),
+            'accountSetNo' => $this->request->getAccountSetNo(),
+            'dateStart' => $this->request->getDateStart(),
+            'dateEnd' => $this->request->getDateEnd(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'getPaymentInformationDetail', $param);
     }
@@ -412,17 +415,17 @@ class OrderService
     /**
      * 4.2.22 收款方在途资金明细查询
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function getPayeeFundsInTransitDetail(OrderRequest $request)
+    public function getPayeeFundsInTransitDetail()
     {
         $param = [
-            'bizUserId' => $request->getBizUserId(),
-            'accountSetNo' => $request->getAccountSetNo(),
-            'bizOrderNo' => $request->getBizOrderNo(),
-            'dateStart' => $request->getDateStart(),
-            'dateEnd' => $request->getDateEnd(),
+            'bizUserId' => $this->request->getBizUserId(),
+            'accountSetNo' => $this->request->getAccountSetNo(),
+            'bizOrderNo' => $this->request->getBizOrderNo(),
+            'dateStart' => $this->request->getDateStart(),
+            'dateEnd' => $this->request->getDateEnd(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'getPayeeFundsInTransitDetail', $param);
     }
@@ -430,30 +433,30 @@ class OrderService
     /**
      * 4.2.23 跨境提现申请
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function crossBorderWithdrawApply(OrderRequest $request)
+    public function crossBorderWithdrawApply()
     {
         $param = [
-            'bizOrderNo' => $request->getBizOrderNo(),
-            'bizUserId' => $request->getBizUserId(),
-            'accountSetNo' => $request->getAccountSetNo(),
-            'amount' => $request->getAmount(),
-            'fee' => $request->getFee(),
-            'validateType' => $request->getValidateType(),
-            'backUrl' => $request->getBackUrl(),
-            'orderExpireDatetime' => $request->getOrderExpireDatetime(),
-            'payMethod' => $request->getPayMethod(),
-            'crossBorderbizUserId' => $request->getCrossBorderbizUserId(),
-            'bankCardNo' => $request->getBankCardNo() ? $this->allinpay->RsaEncode($request->getBankCardNo()) : null,
-            'bankCardPro' => $request->getBankCardPro(),
-            'withdrawType' => $request->getWithdrawType(),
-            'industryCode' => $request->getIndustryCode(),
-            'industryName' => $request->getIndustryName(),
-            'source' => $request->getSource(),
-            'summary' => $request->getSummary(),
-            'extendInfo' => $request->getExtendInfo(),
+            'bizOrderNo' => $this->request->getBizOrderNo(),
+            'bizUserId' => $this->request->getBizUserId(),
+            'accountSetNo' => $this->request->getAccountSetNo(),
+            'amount' => $this->request->getAmount(),
+            'fee' => $this->request->getFee(),
+            'validateType' => $this->request->getValidateType(),
+            'backUrl' => $this->request->getBackUrl(),
+            'orderExpireDatetime' => $this->request->getOrderExpireDatetime(),
+            'payMethod' => $this->request->getPayMethod(),
+            'crossBorderbizUserId' => $this->request->getCrossBorderbizUserId(),
+            'bankCardNo' => $this->request->getBankCardNo() ? $this->allinpay->RsaEncode($this->request->getBankCardNo()) : null,
+            'bankCardPro' => $this->request->getBankCardPro(),
+            'withdrawType' => $this->request->getWithdrawType(),
+            'industryCode' => $this->request->getIndustryCode(),
+            'industryName' => $this->request->getIndustryName(),
+            'source' => $this->request->getSource(),
+            'summary' => $this->request->getSummary(),
+            'extendInfo' => $this->request->getExtendInfo(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'crossBorderWithdrawApply', $param);
     }
@@ -461,13 +464,13 @@ class OrderService
     /**
      * 4.2.24 订单分账明细查询
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function getOrderSplitRuleListDetail(OrderRequest $request)
+    public function getOrderSplitRuleListDetail()
     {
         $param = [
-            'bizOrderNo' => $request->getBizOrderNo(),
+            'bizOrderNo' => $this->request->getBizOrderNo(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'getOrderSplitRuleListDetail', $param);
     }
@@ -475,13 +478,13 @@ class OrderService
     /**
      * 4.2.25 重发支付短信验证码
      *
-     * @param OrderRequest $request
+     * @param OrderRequest $this->request
      * @return array|mixed
      */
-    public function resendPaySMS(OrderRequest $request)
+    public function resendPaySMS()
     {
         $param = [
-            'bizOrderNo' => $request->getBizOrderNo(),
+            'bizOrderNo' => $this->request->getBizOrderNo(),
         ];
         return $this->allinpay->AllinpayCurl('OrderService', 'resendPaySMS', $param);
     }

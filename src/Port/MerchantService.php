@@ -14,20 +14,23 @@ class MerchantService
 {
     private $allinpay;
 
-    public function __construct($config) {
+    private $request;
+
+    public function __construct($config, MerchantRequest $request) {
         $this->allinpay = new AllinpayClient($config);
+        $this->request = $request;
     }
 
     /**
      * 4.3.1 通联通头寸查询
      *
-     * @param MerchantRequest $request
+     * @param MerchantRequest $this->request
      * @return array
      */
-    public function queryReserveFundBalance(MerchantRequest $request)
+    public function queryReserveFundBalance()
     {
         $param = [
-            'sysid' => $request->getSysid(),
+            'sysid' => $this->request->getSysid(),
         ];
         return $this->allinpay->AllinpayCurl('MerchantService', 'queryReserveFundBalance', $param);
     }
@@ -35,14 +38,14 @@ class MerchantService
     /**
      * 4.3.2 商户集合对账文件下载
      *
-     * @param MerchantRequest $request
+     * @param MerchantRequest $this->request
      * @return array
      */
-    public function getCheckAccountFile(MerchantRequest $request)
+    public function getCheckAccountFile()
     {
         $param = [
-            'date'    =>  $request->getDate(),
-            'fileType'    =>  $request->getFileType(),
+            'date'    =>  $this->request->getDate(),
+            'fileType'    =>  $this->request->getFileType(),
         ];
 
         return $this->allinpay->AllinpayCurl('MerchantService', 'getCheckAccountFile', $param);
@@ -51,20 +54,20 @@ class MerchantService
     /**
      * 4.3.3 通联通划款入账通知[回调]
      *
-     * @param MerchantRequest $request
+     * @param MerchantRequest $this->request
      * @return array
      */
 
     /**
      * 4.3.4 平台账户集余额查询
      *
-     * @param MerchantRequest $request
+     * @param MerchantRequest $this->request
      * @return array
      */
-    public function queryMerchantBalance(MerchantRequest $request)
+    public function queryMerchantBalance()
     {
         $param = [
-            'accountSetNo'    =>  $request->getAccountSetNo(),
+            'accountSetNo'    =>  $this->request->getAccountSetNo(),
         ];
 
         return $this->allinpay->AllinpayCurl('MerchantService', 'queryMerchantBalance', $param);
@@ -73,15 +76,15 @@ class MerchantService
     /**
      * 4.3.5 平台银行存管账户余额查询
      *
-     * @param MerchantRequest $request
+     * @param MerchantRequest $this->request
      * @return array
      */
-    public function queryBankBalance(MerchantRequest $request)
+    public function queryBankBalance()
     {
         $param = [
-            'acctOrgType'    =>  $request->getAcctOrgType(),
-            'acctNo'    =>  $request->getAcctNo(),
-            'acctName'    =>  $request->getAcctName(),
+            'acctOrgType'    =>  $this->request->getAcctOrgType(),
+            'acctNo'    =>  $this->request->getAcctNo(),
+            'acctName'    =>  $this->request->getAcctName(),
         ];
 
         return $this->allinpay->AllinpayCurl('MerchantService', 'queryBankBalance', $param);
