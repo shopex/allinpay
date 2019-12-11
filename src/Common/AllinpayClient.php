@@ -241,7 +241,7 @@ class AllinpayClient
      * @throws Exception
      * @author  trendpower
      */
-    private function checkResult($result)
+    public function checkResult($result)
     {
         $arr = json_decode($result, true);
         $sign = $arr['sign'];
