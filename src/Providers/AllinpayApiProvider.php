@@ -21,7 +21,7 @@ class AllinpayApiProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('allinpay', function () {
-            return new Allinpay();
+            return new Allinpay(config('allinpay'));
         });
 
         $this->app->singleton('allinpay.member', function () {

@@ -1,7 +1,9 @@
 <?php
 namespace Onex\Allinpay;
 
-class Allinpay
+use Onex\Allinpay\Common\AllinpayClient;
+
+class Allinpay extends AllinpayClient
 {
 
     /**
